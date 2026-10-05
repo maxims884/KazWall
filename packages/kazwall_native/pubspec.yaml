@@ -1,0 +1,19 @@
+name: kazwall_native
+description: "Установка обоев, отправка картинок и открытие ссылок для KazWall."
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.7.0
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: kz.black13.kazwall_native
+        pluginClass: KazwallNativePlugin

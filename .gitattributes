@@ -1,0 +1,4 @@
+# Скрипты запускаются в bash и на GitHub Actions — им нужны переводы строк LF
+*.sh text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
