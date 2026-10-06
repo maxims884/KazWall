@@ -9,7 +9,7 @@ set -e
 LANG_CODE="$1"
 ONLY="$2"   # необязательно: снять только один экран, например editor
 ADB="${ADB:-$HOME/AppData/Local/Android/Sdk/platform-tools/adb}"
-PKG=kz.black13.kazakhstanwallpaper
+PKG=kz.black13.kazwall
 case "$LANG_CODE" in ru) LANG_Y=764; NATURE_X=740 ;; kk) LANG_Y=886; NATURE_X=798 ;; en) LANG_Y=1009; NATURE_X=635 ;; *) echo "язык: ru, kk или en"; exit 1 ;; esac
 
 tap() { "$ADB" shell input tap "$1" "$2"; sleep "${3:-2}"; }

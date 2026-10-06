@@ -31,7 +31,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "kz.black13.kazakhstanwallpaper"
+        applicationId = "kz.black13.kazwall"
         minSdk = 23
         targetSdk = 35
         versionCode = flutter.versionCode

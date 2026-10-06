@@ -8,10 +8,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Point
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.view.WindowManager
 import androidx.core.content.FileProvider
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -64,7 +67,10 @@ class KazwallNativePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         when (call.method) {
             "isLockScreenSupported" -> result.success(isLockScreenSupported())
             "setWallpaper" -> background(result) {
-                setWallpaper(call.argument<String>("path")!!, call.argument<Int>("target") ?: TARGET_BOTH)
+                setWallpaper(
+                    call.argument<String>("path")!!, call.argument<Int>("target") ?: TARGET_BOTH,
+                    call.argument<List<Int>>("crop")
+                )
             }
             "toJpeg" -> background(result) {
                 toJpeg(
@@ -107,8 +113,16 @@ class KazwallNativePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         return Build.VERSION.SDK_INT >= 24 && WallpaperManager.getInstance(context).isSetWallpaperAllowed
     }
 
-    private fun setWallpaper(path: String, target: Int): Boolean {
-        val bitmap = BitmapFactory.decodeFile(path) ?: return false
+    private fun setWallpaper(path: String, target: Int, crop: List<Int>?): Boolean {
+        val source = BitmapFactory.decodeFile(path) ?: return false
+        val area = if (crop != null && crop.size == 4) {
+            cropArea(source, crop[0], crop[1], crop[2], crop[3])
+        } else {
+            centerArea(source)
+        }
+        // Отдаём системе уже обрезанную картинку с пропорциями экрана. Целую широкую картинку
+        // Android обрезает сам, и на экран попадает её левый край
+        val bitmap = Bitmap.createBitmap(source, area.left, area.top, area.width(), area.height())
         val manager = WallpaperManager.getInstance(context)
         if (Build.VERSION.SDK_INT >= 24) {
             val flags = when (target) {
@@ -121,6 +135,31 @@ class KazwallNativePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             manager.setBitmap(bitmap)
         }
         return true
+    }
+
+    // Область, выбранная пользователем; на всякий случай не даём ей выйти за края картинки
+    private fun cropArea(bitmap: Bitmap, left: Int, top: Int, width: Int, height: Int): Rect {
+        val w = width.coerceIn(1, bitmap.width)
+        val h = height.coerceIn(1, bitmap.height)
+        val l = left.coerceIn(0, bitmap.width - w)
+        val t = top.coerceIn(0, bitmap.height - h)
+        return Rect(l, t, l + w, t + h)
+    }
+
+    // Середина картинки с пропорциями экрана — для автосмены обоев, где выбирать некому
+    private fun centerArea(bitmap: Bitmap): Rect {
+        val size = Point()
+        @Suppress("DEPRECATION")
+        (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getRealSize(size)
+        val screenW = minOf(size.x, size.y).coerceAtLeast(1)
+        val screenH = maxOf(size.x, size.y).coerceAtLeast(1)
+        var w = bitmap.width
+        var h = (w.toLong() * screenH / screenW).toInt()
+        if (h > bitmap.height) {
+            h = bitmap.height
+            w = (h.toLong() * screenW / screenH).toInt()
+        }
+        return cropArea(bitmap, (bitmap.width - w) / 2, (bitmap.height - h) / 2, w, h)
     }
 
     private fun toJpeg(source: String, target: String, quality: Int): Boolean {

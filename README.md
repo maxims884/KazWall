@@ -63,9 +63,9 @@ flutter run --dart-define=CONTENT_BASE=http://10.0.2.2:8000/ --dart-define=NO_AD
 
 ## Перед публикацией в Google Play
 
-1. **AdMob.** Сейчас стоят тестовые блоки Google. Создать приложение в AdMob, вписать свои
-   идентификаторы блоков в `lib/config.dart` и идентификатор приложения в
-   `android/app/src/main/AndroidManifest.xml`.
+1. **AdMob.** Свои идентификаторы уже вписаны (`lib/config.dart` и `AndroidManifest.xml`).
+   В отладочной сборке показываются тестовые блоки Google, в релизной — настоящие:
+   на свою рекламу не нажимать, телефон добавить в тестовые устройства AdMob.
 2. **Ключ подписи.** Создать `android/key.properties` (в репозиторий не попадает):
    ```
    storeFile=C:/путь/к/ключу.jks

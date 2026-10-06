@@ -12,9 +12,17 @@ class KazwallNative {
   static Future<bool> isLockScreenSupported() async =>
       await _channel.invokeMethod<bool>('isLockScreenSupported') ?? false;
 
-  /// Ставит картинку из файла на экран. Работает и без открытого приложения
-  static Future<bool> setWallpaper(String path, int target) async =>
-      await _channel.invokeMethod<bool>('setWallpaper', {'path': path, 'target': target}) ?? false;
+  /// Ставит картинку из файла на экран. Работает и без открытого приложения.
+  /// [crop] — какую часть картинки взять, в её пикселях. Без него берётся середина
+  /// с пропорциями экрана: иначе Android сам обрезает широкие картинки по левому краю
+  static Future<bool> setWallpaper(String path, int target, {Rect? crop}) async =>
+      await _channel.invokeMethod<bool>('setWallpaper', {
+        'path': path,
+        'target': target,
+        if (crop != null)
+          'crop': [crop.left.round(), crop.top.round(), crop.width.round(), crop.height.round()],
+      }) ??
+      false;
 
   /// Перекодирует картинку в JPEG: открытка с именем рисуется в PNG, а он слишком тяжёлый для отправки
   static Future<bool> toJpeg(String source, String target, {int quality = 92}) async =>
