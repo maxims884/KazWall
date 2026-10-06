@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:kazwall_native/kazwall_native.dart';
 
 import '../l10n/strings.dart';
@@ -19,7 +18,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notifications = false;
   // Раздел покупок скрыт, пока Google Play не отдал товары
-  List<ProductDetails> _products = const [];
+  List<StoreProduct> _products = const [];
 
   @override
   void initState() {

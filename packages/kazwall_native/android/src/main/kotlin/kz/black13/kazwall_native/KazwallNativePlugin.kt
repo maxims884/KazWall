@@ -36,11 +36,13 @@ class KazwallNativePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private var activity: Activity? = null
     private val executor = Executors.newSingleThreadExecutor()
     private val main = Handler(Looper.getMainLooper())
+    private var billing: Billing? = null
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         context = binding.applicationContext
         channel = MethodChannel(binding.binaryMessenger, "kazwall_native")
         channel.setMethodCallHandler(this)
+        billing = Billing(context, channel, main)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -92,6 +94,19 @@ class KazwallNativePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         open(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$id")))
                 )
             }
+            "purchasesInit" -> {
+                billing?.init(call.argument<List<String>>("consumables") ?: emptyList())
+                result.success(true)
+            }
+            "purchasesProducts" -> {
+                val store = billing
+                if (store == null) {
+                    result.success(emptyList<Map<String, String>>())
+                } else {
+                    store.products(call.argument<List<String>>("ids") ?: emptyList()) { result.success(it) }
+                }
+            }
+            "purchasesBuy" -> result.success(billing?.buy(activity, call.argument<String>("id") ?: "") == true)
             else -> result.notImplemented()
         }
     }
