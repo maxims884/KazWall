@@ -13,8 +13,22 @@ import '../services/ads.dart';
 import '../services/picture_actions.dart';
 import '../theme.dart';
 
+/// Шрифт для своего текста. Lobster и Montserrat — те же, которыми бот пишет поздравление
+/// на открытке (content_bot/cards.py), так что имя можно подобрать под готовую надпись
+class _Font {
+  const _Font(this.name, {this.family, this.weight});
+
+  final String name;
+
+  /// Семейство из pubspec.yaml; null — шрифт телефона
+  final String? family;
+
+  /// Насыщенность для шрифтов, у которых она настраивается
+  final double? weight;
+}
+
 /// Открытка с именем: пользователь пишет текст поверх картинки, двигает его пальцем,
-/// выбирает цвет и размер и отправляет готовую картинку.
+/// выбирает шрифт, цвет, размер и ширину блока и отправляет готовую картинку.
 class CardEditorScreen extends StatefulWidget {
   const CardEditorScreen({super.key, required this.picture});
 
@@ -26,6 +40,17 @@ class CardEditorScreen extends StatefulWidget {
 
 class _CardEditorScreenState extends State<CardEditorScreen> {
   static const _colors = [Colors.white, Color(0xFFFFD54F), Color(0xFFE53935), Color(0xFF212121)];
+  static const _fonts = [
+    _Font('Lobster', family: 'Lobster'),
+    _Font('Montserrat', family: 'Montserrat', weight: 700),
+    _Font('Pacifico', family: 'Pacifico'),
+    _Font('Caveat', family: 'Caveat', weight: 700),
+    _Font('Roboto', weight: 700),
+  ];
+  // Уже этого блок текста не сжимается, доля ширины открытки
+  static const _minWidth = 0.25;
+  // Кружок, за который тянут край блока
+  static const _handle = 36.0;
 
   final _cardKey = GlobalKey();
   ui.Image? _image;
@@ -37,8 +62,11 @@ class _CardEditorScreenState extends State<CardEditorScreen> {
   final _input = TextEditingController(text: Config.demoName);
   late String _text = _input.text;
   Color _color = Colors.white;
+  _Font _font = _fonts.first;
   // Размер шрифта, как если бы открытка была шириной 360
   double _size = 28;
+  // Ширина блока текста в долях открытки: по ней текст переносится на новую строку
+  double _width = 0.9;
   // Левый верхний угол текста в долях открытки. Пока текст не двигали — держим его по центру
   // той половины открытки, где нет поздравления
   Offset? _position;
@@ -81,10 +109,15 @@ class _CardEditorScreenState extends State<CardEditorScreen> {
       ..showSnackBar(SnackBar(content: Text(text), duration: const Duration(seconds: 2)));
   }
 
-  TextStyle _style(double frameWidth) => TextStyle(
+  // inherit: false — чтобы текст на экране совпадал с измеренным: тема приложения добавляет
+  // расстояние между буквами, и из-за него слова переносились раньше края блока
+  TextStyle _style(double frameWidth, {_Font? font}) => TextStyle(
+    inherit: false,
     color: _color,
     fontSize: _size * frameWidth / 360,
-    fontWeight: FontWeight.w700,
+    fontFamily: (font ?? _font).family,
+    fontWeight: (font ?? _font).weight == null ? FontWeight.w400 : FontWeight.w700,
+    fontVariations: [if ((font ?? _font).weight != null) ui.FontVariation('wght', (font ?? _font).weight!)],
     height: 1.2,
     // Тёмный текст лучше читается со светлой тенью
     shadows: [
@@ -140,12 +173,13 @@ class _CardEditorScreenState extends State<CardEditorScreen> {
 
     final style = _style(frame.width);
     final shown = _text.isEmpty ? s['card_text_placeholder'] : _text;
+    // Высота блока зависит от того, во сколько строк текст уложился в его ширину
     final painter = TextPainter(
       text: TextSpan(text: shown, style: style),
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
-    )..layout(maxWidth: frame.width * 0.9);
-    final textSize = painter.size;
+    )..layout(maxWidth: frame.width * _width);
+    final textSize = Size(frame.width * _width, painter.height);
     painter.dispose();
 
     // Текст не должен уезжать за края открытки
@@ -182,13 +216,56 @@ class _CardEditorScreenState extends State<CardEditorScreen> {
                               ((y + d.delta.dy).clamp(0.0, maxY)) / frame.height,
                             );
                           }),
-                      child: Text(
-                        shown,
-                        textAlign: TextAlign.center,
-                        style: _text.isEmpty ? style.copyWith(color: Colors.white.withValues(alpha: 0.67)) : style,
+                      child: DecoratedBox(
+                        // Рамка показывает ширину блока; на готовую открытку не попадает
+                        position: DecorationPosition.foreground,
+                        decoration: BoxDecoration(
+                          border: Border.symmetric(
+                            vertical: BorderSide(color: _capturing ? Colors.transparent : Colors.white54),
+                          ),
+                        ),
+                        child: Text(
+                          shown,
+                          textAlign: TextAlign.center,
+                          textScaler: TextScaler.noScaling,
+                          style: _text.isEmpty ? style.copyWith(color: Colors.white.withValues(alpha: 0.67)) : style,
+                        ),
                       ),
                     ),
                   ),
+                // Края блока: потянули — текст стал шире или уже и переносится по-другому
+                if (!_capturing)
+                  for (final right in [false, true])
+                    Positioned(
+                      left: (right ? x + textSize.width : x) - _handle / 2,
+                      top: y + textSize.height / 2 - _handle / 2,
+                      width: _handle,
+                      height: _handle,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onPanUpdate:
+                            (d) => setState(() {
+                              final min = frame.width * _minWidth;
+                              // Противоположный край стоит на месте
+                              final left = right ? x : (x + d.delta.dx).clamp(0.0, x + textSize.width - min);
+                              final end =
+                                  right ? (x + textSize.width + d.delta.dx).clamp(x + min, frame.width) : x + textSize.width;
+                              _width = (end - left) / frame.width;
+                              _position = Offset(left / frame.width, y / frame.height);
+                            }),
+                        child: Center(
+                          child: Container(
+                            width: 16,
+                            height: 16,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: const [BoxShadow(color: Color(0x99000000), blurRadius: 4)],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
               ],
             ),
           ),
@@ -234,6 +311,43 @@ class _CardEditorScreenState extends State<CardEditorScreen> {
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                     ),
                     onChanged: (text) => setState(() => _text = text.trim()),
+                  ),
+                  const SizedBox(height: 8),
+                  // Шрифты: каждый подписан своим названием в своём начертании
+                  Semantics(
+                    label: s['card_font'],
+                    child: SizedBox(
+                      height: 38,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _fonts.length,
+                        separatorBuilder: (_, _) => const SizedBox(width: 8),
+                        itemBuilder: (context, i) {
+                          final font = _fonts[i];
+                          final selected = font == _font;
+                          return GestureDetector(
+                            onTap: () => setState(() => _font = font),
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(horizontal: 14),
+                              decoration: BoxDecoration(
+                                color: selected ? colors.primary : colors.surfaceContainerHigh,
+                                borderRadius: BorderRadius.circular(19),
+                              ),
+                              child: Text(
+                                font.name,
+                                style: _style(360, font: font).copyWith(
+                                  color: selected ? colors.onPrimary : colors.onSurface,
+                                  fontSize: 16,
+                                  height: 1.0,
+                                  shadows: const [],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Row(

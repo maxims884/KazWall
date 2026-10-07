@@ -2,23 +2,30 @@
 
 Берёт три открытки из папки контента (ветка content, подключённая в ../content):
     python make_feature_graphic.py
+    python make_feature_graphic.py uzb    # «Узбекистан обои»: открытки из ../content_uzb, результат в uzb/
 """
 import json
 import os
 
 from PIL import Image, ImageDraw, ImageFilter
 
-from make_screenshots import GOLD, HERE, background, font, rounded_mask, wrap
+from make_screenshots import BASE, GOLD, HERE, UZB, background, font, rounded_mask, wrap
 
 W, H = 1024, 500
-CONTENT = os.path.join(HERE, "..", "content")
+CONTENT = os.path.join(HERE, "..", "content_uzb" if UZB else "content")
 TEXTS = {
+    "ru": ("Узбекистан обои и открытки", "Новые картинки каждый день"),
+    "uz": ("O‘zbekiston fon rasmlari va tabriknomalar", "Har kuni yangi rasmlar"),
+    "en": ("Uzbekistan Wallpapers & Cards", "New pictures every day"),
+} if UZB else {
     "ru": ("Казахстан обои и открытки", "Новые картинки каждый день"),
     "kk": ("Қазақстан тұсқағаздары мен ашық хаттар", "Күн сайын жаңа суреттер"),
     "en": ("Kazakhstan Wallpapers & Cards", "New pictures every day"),
 }
 # Какие открытки показать на обложке
-WANTED = ["nauryz", "republic", "birthday"]
+WANTED = ["navruz", "independence", "birthday"] if UZB else ["nauryz", "republic", "birthday"]
+# Язык страны: английских открыток нет — на английской обложке они на нём
+LOCAL = "uz" if UZB else "kk"
 
 
 def card_images(lang):
@@ -27,8 +34,7 @@ def card_images(lang):
     images = []
     for occasion in WANTED:
         same = [c for c in cards if c.get("occasion") == occasion]
-        # Английских открыток нет — на английской обложке казахские
-        best = [c for c in same if c.get("lang") == ("ru" if lang == "ru" else "kk")] or same
+        best = [c for c in same if c.get("lang") == ("ru" if lang == "ru" else LOCAL)] or same
         images.append(Image.open(os.path.join(CONTENT, best[0]["file"])).convert("RGB"))
     return images
 
@@ -66,7 +72,7 @@ def make(lang):
     draw.line([(182, y), (276, y)], fill=GOLD, width=3)
     draw.text((56, y + 26), subtitle, font=font("Montserrat[wght].ttf", 30, b"Medium"), fill=(255, 255, 255, 220))
 
-    out = os.path.join(HERE, "screenshots", lang)
+    out = os.path.join(BASE, "screenshots", lang)
     os.makedirs(out, exist_ok=True)
     canvas.convert("RGB").save(os.path.join(out, "feature_graphic.png"), optimize=True)
     print("готово", lang)

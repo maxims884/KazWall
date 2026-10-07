@@ -28,7 +28,7 @@ class PictureActions {
       // Галерее нужно расширение в имени файла, а в кэше оно есть не всегда
       var source = file;
       if (!RegExp(r'\.(jpe?g|png)$', caseSensitive: false).hasMatch(file.path)) {
-        source = await file.copy('${file.parent.path}/kazakhstan_${DateTime.now().millisecondsSinceEpoch}.jpg');
+        source = await file.copy('${file.parent.path}/${Config.album.toLowerCase()}_${DateTime.now().millisecondsSinceEpoch}.jpg');
       }
       await Gal.putImage(source.path, album: Config.album);
       return SaveResult.saved;
@@ -44,6 +44,7 @@ class PictureActions {
     file.path,
     text: s['share_text'] + Config.storeUrl,
     title: s['share'],
+    name: Config.album.toLowerCase(),
     whatsApp: whatsApp,
   );
 }

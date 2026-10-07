@@ -18,7 +18,7 @@ class AppSettings extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// "ru", "kk", "en" или "" — как в системе
+  /// Один из Config.languages или "" — как в системе
   String get language => Prefs.language;
 
   set language(String value) {

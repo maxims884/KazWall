@@ -31,11 +31,27 @@ android {
     }
 
     defaultConfig {
-        applicationId = "kz.black13.kazwall"
         minSdk = 23
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    // Два приложения из одного кода: flutter build appbundle --flavor kaz|uzb.
+    // Название и иконка каждого — в src/<flavor>/res, остальные отличия — в lib/config.dart
+    flavorDimensions += "country"
+    productFlavors {
+        create("kaz") {
+            dimension = "country"
+            applicationId = "kz.black13.kazwall"
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-2230097402282612~3805993929"
+        }
+        create("uzb") {
+            dimension = "country"
+            applicationId = "uz.black13.uzbwall"
+            // Пока это тестовый идентификатор Google: перед публикацией вписать свой из AdMob
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+        }
     }
 
     signingConfigs {

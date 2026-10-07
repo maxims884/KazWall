@@ -83,7 +83,8 @@ class KazwallNativePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "shareImage" -> background(result) {
                 shareImage(
                     call.argument<String>("path")!!, call.argument<String>("text") ?: "",
-                    call.argument<String>("title") ?: "", call.argument<Boolean>("whatsApp") == true
+                    call.argument<String>("title") ?: "", call.argument<String>("name") ?: "kazakhstan",
+                    call.argument<Boolean>("whatsApp") == true
                 )
             }
             "openUrl" -> result.success(open(Intent(Intent.ACTION_VIEW, Uri.parse(call.argument<String>("url")))))
@@ -183,13 +184,13 @@ class KazwallNativePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         return true
     }
 
-    private fun shareImage(path: String, text: String, title: String, whatsApp: Boolean): Boolean {
+    private fun shareImage(path: String, text: String, title: String, name: String, whatsApp: Boolean): Boolean {
         val source = File(path)
         val png = path.endsWith(".png", true)
         // FileProvider отдаёт другим приложениям только файлы из cache/shared
         val dir = File(context.cacheDir, "shared")
         dir.mkdirs()
-        val target = File(dir, "kazakhstan." + if (png) "png" else "jpg")
+        val target = File(dir, name + "." + if (png) "png" else "jpg")
         if (source.canonicalPath != target.canonicalPath) source.copyTo(target, true)
 
         val uri = FileProvider.getUriForFile(context, context.packageName + ".kazwall.fileprovider", target)

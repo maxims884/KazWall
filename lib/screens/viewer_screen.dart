@@ -409,7 +409,7 @@ class _ViewerScreenState extends State<ViewerScreen>
                                             backgroundColor:
                                                 card
                                                     ? whatsAppGreen
-                                                    : const Color(0xFF0091AD),
+                                                    : brandButton,
                                             foregroundColor: Colors.white,
                                             padding: const EdgeInsets.symmetric(
                                               horizontal: 12,

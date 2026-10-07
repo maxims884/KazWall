@@ -69,12 +69,14 @@ class KazwallNative {
     String path, {
     required String text,
     required String title,
+    String name = 'kazakhstan',
     bool whatsApp = false,
   }) async =>
       await _channel.invokeMethod<bool>('shareImage', {
         'path': path,
         'text': text,
         'title': title,
+        'name': name,
         'whatsApp': whatsApp,
       }) ??
       false;

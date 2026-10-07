@@ -42,7 +42,7 @@ class Prefs {
   static String get themeMode => _sp.getString('themeMode') ?? 'system';
   static set themeMode(String value) => _sp.setString('themeMode', value);
 
-  /// Язык, выбранный в приложении: "ru", "kk", "en" или "" (как в системе)
+  /// Язык, выбранный в приложении (один из Config.languages) или "" (как в системе)
   static String get language => _sp.getString('language') ?? '';
   static set language(String value) => _sp.setString('language', value);
 

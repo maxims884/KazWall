@@ -156,7 +156,7 @@ class WallpaperCropScreenState extends State<WallpaperCropScreen> {
                           height: 56,
                           child: FilledButton.icon(
                             style: FilledButton.styleFrom(
-                              backgroundColor: const Color(0xFF0091AD),
+                              backgroundColor: brandButton,
                               foregroundColor: Colors.white,
                               textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                             ),

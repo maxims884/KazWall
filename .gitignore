@@ -44,13 +44,16 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Ветка content (картинки и каталог) подключена сюда как git worktree
+# Ветки content и content-uzb (картинки и каталог) подключены сюда как git worktree
 /content/
+/content_uzb/
 
 # Пробные картинки бота контента и снимки экрана для скриншотов
 content_bot/out/
+content_bot/out_*/
 __pycache__/
 store_listing/raw/
+store_listing/uzb/raw/
 
 # Ключ подписи
 /android/key.properties

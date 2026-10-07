@@ -1,4 +1,4 @@
-"""Бот контента для "Казахстан обои".
+"""Бот контента для "Казахстан обои" и "Узбекистан обои".
 
 Каждый день добавляет 1 новые обои и 1–2 открытки. Сервера нет: картинки и список
 catalog.json лежат в ветке content репозитория на GitHub, приложение читает их оттуда.
@@ -11,8 +11,11 @@ catalog.json лежат в ветке content репозитория на GitHub
     python bot.py cards nauryz birthday  # открытки к выбранным поводам (названия — в texts.py)
     python bot.py remove <id> [<id>…]    # убрать картинки из приложения (второй раз бот их не возьмёт)
 
-Папка с контентом — переменная CONTENT_DIR, по умолчанию ../content.
-С --dry-run контент не трогается: картинки сохраняются в папку out/, чтобы посмотреть результат.
+Страна — ключ --country kaz|uzb или переменная COUNTRY, по умолчанию kaz (Казахстан):
+    python bot.py daily --country uzb
+
+Папка с контентом — переменная CONTENT_DIR, по умолчанию ../content (для Узбекистана ../content_uzb).
+С --dry-run контент не трогается: картинки сохраняются в папку out/ (out_uzb/), чтобы посмотреть результат.
 """
 import argparse
 import datetime
@@ -26,15 +29,14 @@ import time
 from PIL import Image
 
 import cards
+import country
 import sources
 import texts
 
-BRAND = {"kk": "Қазақстан тұсқағаздары", "ru": "Казахстан обои"}
 WALLPAPER_TYPES = ["nature", "animals", "arch", "relig", "culture"]
 # В каком порядке пополняются категории: природы больше всего, остальные по очереди
 ROTATION = ["nature", "arch", "nature", "animals", "nature", "relig", "nature", "culture", "arch", "animals"]
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "out")
 MAX_PIXELS = 4_000_000  # ~1600x2500: хватает для экрана телефона, файл ~500 КБ
 THUMB_WIDTH = 480       # миниатюра для сетки, ~30 КБ
 # Не больше стольких кадров из одной серии почти одинаковых фото
@@ -46,7 +48,10 @@ class Store:
 
     def __init__(self, dry_run):
         self.dry_run = dry_run
-        self.root = OUT if dry_run else os.environ.get("CONTENT_DIR") or os.path.join(HERE, "..", "content")
+        # Пробные картинки каждой страны — в своей папке: out, out_uzb
+        out = os.path.join(HERE, "out" if country.name == "kaz" else "out_" + country.name)
+        self.root = out if dry_run else \
+            os.environ.get("CONTENT_DIR") or os.path.join(HERE, "..", country.data.CONTENT_DIR)
         os.makedirs(self.root, exist_ok=True)
         self.catalog_path = os.path.join(self.root, "catalog.json")
         self.state_path = os.path.join(self.root, "state.json")
@@ -158,8 +163,8 @@ used_variants = {}
 
 def add_card(store, occasion, today, index):
     rnd = random.Random("%s-%s-%d" % (today.isoformat(), occasion, index))
-    data = texts.OCCASIONS[occasion]
-    lang = "kk" if rnd.random() < 0.6 else "ru"
+    data = country.data.OCCASIONS[occasion]
+    lang = country.data.LOCAL_LANG if rnd.random() < 0.6 else "ru"
     # Варианты текста берём по очереди, чтобы в одной партии не было одинаковых открыток подряд
     key = (occasion, lang)
     used_variants[key] = used_variants.get(key, rnd.randrange(len(data[lang]))) + 1
@@ -181,13 +186,14 @@ def add_card(store, occasion, today, index):
                 if not cards.is_good_background(background):
                     print("  фон слишком тёмный или однотонный", item["id"])
                     continue
-                card, text_at = cards.render(background, title, subtitle, BRAND[lang], seed=item["id"])
+                card, text_at = cards.render(background, title, subtitle, country.data.BRAND[lang],
+                                             seed=item["id"])
             except Exception as e:
                 print("  фон не подошёл", item["id"], e)
                 continue
             main, small, size = prepare(card)
             name = file_name(occasion, index)
-            tags = [occasion, title.strip("!"), "открытка", "ашық хат", "card"]
+            tags = [occasion, title.strip("!")] + country.data.CARD_TAGS
             fields = {"tags": tags, "occasion": occasion, "lang": lang, "textAt": text_at,
                       "backgroundSource": item["sourceUrl"], "license": item["license"]}
             print("открытка:", occasion, lang, title)
@@ -205,7 +211,9 @@ def main():
     parser.add_argument("--count", type=int, default=30)
     parser.add_argument("--type", choices=WALLPAPER_TYPES)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--country", choices=country.NAMES, default=country.DEFAULT)
     args = parser.parse_args()
+    country.use(args.country)
 
     store = Store(args.dry_run)
     today = datetime.date.today()
@@ -222,7 +230,7 @@ def main():
     elif args.command == "seed-cards":
         # Для первичного наполнения: по одной на каждый праздник, остальное — повседневные поводы
         everyday = ["morning", "evening", "friday", "birthday"]
-        plan = (list(texts.HOLIDAYS) + everyday * args.count)[:args.count]
+        plan = (list(country.data.HOLIDAYS) + everyday * args.count)[:args.count]
         for i, occasion in enumerate(plan):
             add_card(store, occasion, today, 100 + i)
     elif args.command == "cards":

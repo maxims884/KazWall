@@ -2,28 +2,33 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 
-/// Тексты интерфейса на русском, казахском и английском.
+import '../config.dart';
+
+/// Тексты интерфейса на русском, английском и языке страны: казахском в «Казахстан обои»,
+/// узбекском в «Узбекистан обои».
 /// Простая таблица вместо gen-l10n: те же строки нужны уведомлениям из фоновых задач,
 /// где нет BuildContext.
 class S {
   const S(this.code);
 
-  /// "ru", "kk" или "en"
+  /// "ru", "en" и "kk" или "uz"
   final String code;
 
-  static const languages = ['ru', 'kk', 'en'];
+  static const languages = Config.languages;
 
   /// [language] — выбранный в настройках язык или "" (как в системе)
   factory S.forLanguage(String language) {
     if (languages.contains(language)) return S(language);
     final system = PlatformDispatcher.instance.locale.languageCode;
-    // Как и в "Кыргызстан обои": всем, у кого телефон не на казахском и не на английском, — русский
-    return S(system == 'kk' || system == 'en' ? system : 'ru');
+    // Как и в "Кыргызстан обои": всем, у кого телефон не на языке страны и не на английском, — русский
+    return S(languages.contains(system) ? system : 'ru');
   }
 
   static S of(BuildContext context) => S(Localizations.localeOf(context).languageCode);
 
-  String operator [](String key) => _strings[code]?[key] ?? _strings['ru']![key] ?? key;
+  String operator [](String key) => _own[code]?[key] ?? _strings[code]?[key] ?? _own['ru']?[key] ?? _strings['ru']![key] ?? key;
+
+  static const _own = Config.uzb ? _uzbekistan : <String, Map<String, String>>{};
 
   String holidayTitle(String holiday) => this['holiday_title'].replaceFirst('%s', holiday);
 }
@@ -100,7 +105,8 @@ const _strings = <String, Map<String, String>>{
     'card_name_hint': 'Имя или поздравление',
     'card_text_placeholder': 'Ваш текст',
     'card_text_size': 'Размер текста',
-    'card_drag_hint': 'Текст можно передвинуть пальцем',
+    'card_font': 'Шрифт',
+    'card_drag_hint': 'Текст можно передвинуть, а за края — сделать шире или уже',
     'holiday_channel': 'Праздники',
     'holiday_title': '%s — открытки готовы',
     'holiday_text': 'Поздравьте близких открыткой с именем',
@@ -188,7 +194,8 @@ const _strings = <String, Map<String, String>>{
     'card_name_hint': 'Есім немесе құттықтау',
     'card_text_placeholder': 'Сіздің мәтініңіз',
     'card_text_size': 'Мәтін өлшемі',
-    'card_drag_hint': 'Мәтінді саусақпен жылжытуға болады',
+    'card_font': 'Қаріп',
+    'card_drag_hint': 'Мәтінді жылжытуға, ал шетінен тартып енін өзгертуге болады',
     'holiday_channel': 'Мерекелер',
     'holiday_title': '%s — ашық хаттар дайын',
     'holiday_text': 'Жақындарыңызды есімі жазылған ашық хатпен құттықтаңыз',
@@ -204,6 +211,94 @@ const _strings = <String, Map<String, String>>{
     'holiday_independence': 'Тәуелсіздік күні',
     'holiday_oraza_ait': 'Ораза айт',
     'holiday_kurban_ait': 'Құрбан айт',
+  },
+  // Узбекский (латиница). Вместо ʻ и ʼ стоят ‘ и ’: они есть во всех шрифтах
+  'uz': {
+    'app_name': 'O‘zbekiston fon rasmlari',
+    'action_settings': 'Sozlamalar',
+    'tab_feed': 'Lenta',
+    'tab_cards': 'WhatsApp tabriknomalari',
+    'tab_nature': 'Tabiat',
+    'tab_animals': 'Hayvonlar',
+    'tab_arch': 'Me’morchilik',
+    'tab_relig': 'Din',
+    'tab_culture': 'An’analar',
+    'nav_favorites': 'Sevimlilar',
+    'no_internet': 'Internet aloqasi yo‘q',
+    'ad_badge': 'Reklama',
+    'back': 'Orqaga',
+    'cards_empty': 'Tabriknomalar tez orada qo‘shiladi',
+    'load_failed': 'Rasmlarni yuklab bo‘lmadi.\nYangilash uchun pastga torting.',
+    'set_wallpaper': 'O‘rnatish',
+    'set_wallpaper_title': 'Fon rasmini o‘rnatish',
+    'crop_hint': 'Rasmni ekranda qanday turishi kerak bo‘lsa, shunday suring va kattalashtiring',
+    'target_home': 'Asosiy ekranga',
+    'target_lock': 'Qulflash ekraniga',
+    'target_both': 'Ikkala ekranga',
+    'wallpaper_set': 'Fon rasmi o‘rnatildi!',
+    'wallpaper_failed': 'Fon rasmini o‘rnatib bo‘lmadi',
+    'lock_not_supported': 'Qurilmangiz qulflash ekrani rasmini o‘zgartirishni qo‘llab-quvvatlamaydi!',
+    'save': 'Qurilmaga saqlash',
+    'share': 'Ulashish',
+    'favorite': 'Sevimlilarga qo‘shish',
+    'favorites_empty': 'Sevimlilar hozircha bo‘sh.\nIstalgan rasmdagi yurakchani bosing.',
+    'favorite_added': 'Sevimlilarga qo‘shildi',
+    'favorite_removed': 'Sevimlilardan olib tashlandi',
+    'image_saved': 'Rasm galereyaga saqlandi',
+    'image_save_failed': 'Rasmni saqlab bo‘lmadi',
+    'image_load_failed': 'Rasmni yuklab bo‘lmadi',
+    'storage_permission_denied': 'Fayllarni saqlashga ruxsat yo‘q',
+    'share_text': 'O‘zbekiston fon rasmlari HD: ',
+    'settings_section_auto': 'Avtomatik',
+    'settings_auto_wallpaper': 'Fon rasmini har kuni almashtirish',
+    'settings_auto_wallpaper_hint': 'Kuniga bir marta asosiy va qulflash ekraniga yangi rasm qo‘yiladi',
+    'settings_auto_source_favorites': 'Sevimlilardan',
+    'settings_auto_source_all': 'Barchasidan',
+    'settings_auto_no_favorites': 'Sevimlilar bo‘sh — rasmlar barcha fon rasmlaridan olinadi',
+    'settings_weekly': '«Hafta fon rasmi» bildirishnomasi',
+    'settings_weekly_hint': 'Haftada bir marta bitta yangi rasm yuboramiz',
+    'settings_reminder': 'Yangi fon rasmlari haqida eslatish',
+    'settings_reminder_hint': '5 kun kirmasangiz bitta bildirishnoma, ikki haftadan keyin yana bitta',
+    'settings_holidays': 'Bayram tabriknomalari',
+    'settings_holidays_hint': 'Bayramdan bir kun oldin eslatamiz',
+    'settings_section_theme': 'Ko‘rinish',
+    'theme_system': 'Tizim bo‘yicha',
+    'theme_light': 'Yorug‘',
+    'theme_dark': 'Qorong‘i',
+    'settings_section_language': 'Til',
+    'lang_system': 'Tizimdagidek',
+    'settings_section_rate': 'Baholash',
+    'settings_rate': 'Ilovani baholang',
+    'settings_section_purchases': 'Ilova ichidagi xaridlar',
+    'notifications_denied': 'Bildirishnomalar telefon sozlamalarida o‘chirilgan',
+    'reminder_channel': 'Eslatmalar',
+    'reminder_title': 'Ko‘rishmaganimizga ancha bo‘ldi',
+    'reminder_text': 'Lentada yangi rasmlar paydo bo‘ldi',
+    'weekly_channel': 'Hafta fon rasmi',
+    'weekly_title': 'Hafta fon rasmi',
+    'weekly_text': 'Ekraningiz uchun yangi rasm',
+    'search': 'Qidirish',
+    'search_hint': 'Tog‘lar, Navro‘z, Samarqand…',
+    'search_empty': 'Hech narsa topilmadi.\nBoshqa so‘zni sinab ko‘ring.',
+    'card_with_name': 'Ismli tabriknoma',
+    'card_name_hint': 'Ism yoki tabrik',
+    'card_text_placeholder': 'Sizning matningiz',
+    'card_text_size': 'Matn o‘lchami',
+    'card_font': 'Shrift',
+    'card_drag_hint': 'Matnni suring, chetidan tortib kengligini o‘zgartiring',
+    'holiday_channel': 'Bayramlar',
+    'holiday_title': '%s — tabriknomalar tayyor',
+    'holiday_text': 'Yaqinlaringizni ismli tabriknoma bilan tabriklang',
+    'holiday_new_year': 'Yangi yil',
+    'holiday_defender': 'Vatan himoyachilari kuni',
+    'holiday_mar8': '8-mart',
+    'holiday_navruz': 'Navro‘z',
+    'holiday_memory': 'Xotira va qadrlash kuni',
+    'holiday_independence': 'Mustaqillik kuni',
+    'holiday_teacher': 'O‘qituvchi va murabbiylar kuni',
+    'holiday_constitution': 'Konstitutsiya kuni',
+    'holiday_ramazon_hayit': 'Ramazon hayiti',
+    'holiday_qurbon_hayit': 'Qurbon hayiti',
   },
   'en': {
     'app_name': 'Kazakhstan Wallpapers',
@@ -277,7 +372,8 @@ const _strings = <String, Map<String, String>>{
     'card_name_hint': 'Name or greeting',
     'card_text_placeholder': 'Your text',
     'card_text_size': 'Text size',
-    'card_drag_hint': 'Drag the text with your finger',
+    'card_font': 'Font',
+    'card_drag_hint': 'Drag the text to move it, drag its edges to change the width',
     'holiday_channel': 'Holidays',
     'holiday_title': '%s — cards are ready',
     'holiday_text': 'Send your loved ones a card with their name',
@@ -296,5 +392,31 @@ const _strings = <String, Map<String, String>>{
   },
 };
 
+/// Строки, которые в «Узбекистан обои» другие; остальные русские и английские — общие
+const _uzbekistan = <String, Map<String, String>>{
+  'ru': {
+    'app_name': 'Узбекистан обои',
+    'share_text': 'Узбекистан обои HD: ',
+    'search_hint': 'Горы, Навруз, Самарканд…',
+    'holiday_defender': 'День защитников Родины',
+    'holiday_navruz': 'Навруз',
+    'holiday_memory': 'День памяти и почестей',
+    'holiday_teacher': 'День учителя и наставника',
+    'holiday_ramazon_hayit': 'Рамазан хайит',
+    'holiday_qurbon_hayit': 'Курбан хайит',
+  },
+  'en': {
+    'app_name': 'Uzbekistan Wallpapers',
+    'share_text': 'Uzbekistan Wallpapers HD: ',
+    'search_hint': 'Mountains, Navruz, Samarkand…',
+    'holiday_defender': 'Defenders of the Motherland Day',
+    'holiday_navruz': 'Navruz',
+    'holiday_memory': 'Day of Remembrance and Honour',
+    'holiday_teacher': 'Teachers and Mentors Day',
+    'holiday_ramazon_hayit': 'Ramazon Hayit',
+    'holiday_qurbon_hayit': 'Qurbon Hayit',
+  },
+};
+
 /// Названия языков в настройках не переводятся
-const languageNames = {'ru': 'Русский', 'kk': 'Қазақша', 'en': 'English'};
+const languageNames = {'ru': 'Русский', 'kk': 'Қазақша', 'uz': 'O‘zbekcha', 'en': 'English'};

@@ -1,16 +1,26 @@
 #!/usr/bin/env bash
 # Снимает шесть экранов приложения для скриншотов Google Play на одном языке:
 #     tools/capture.sh ru|kk|en
+#     FLAVOR=uzb tools/capture.sh ru|uz|en     # «Узбекистан обои»: снимки идут в store_listing/uzb/raw
 # Нужен запущенный эмулятор с экраном 900x1600 (adb shell wm size 900x1600; adb shell wm density 350),
 # отладочная сборка с --dart-define=NO_ADS=true --dart-define=DEMO_NAME=…, тёмная тема
 # и одна вертикальная картинка в избранном (она попадёт на экран "просмотр").
 # Снимки кладутся в store_listing/raw/<язык>/, дальше их собирает store_listing/make_screenshots.py
+# Пока контент Узбекистана не на GitHub, сборке нужен ещё --dart-define=CONTENT_BASE=http://10.0.2.2:8000/
+# и запущенный в папке content_uzb сервер: python -m http.server 8000 --protocol HTTP/1.1
 set -e
 LANG_CODE="$1"
 ONLY="$2"   # необязательно: снять только один экран, например editor
 ADB="${ADB:-$HOME/AppData/Local/Android/Sdk/platform-tools/adb}"
-PKG=kz.black13.kazwall
-case "$LANG_CODE" in ru) LANG_Y=764; NATURE_X=740 ;; kk) LANG_Y=886; NATURE_X=798 ;; en) LANG_Y=1009; NATURE_X=635 ;; *) echo "язык: ru, kk или en"; exit 1 ;; esac
+if [ "$FLAVOR" = uzb ]; then
+  PKG=uz.black13.uzbwall
+  export RAW=store_listing/uzb/raw
+  case "$LANG_CODE" in ru) LANG_Y=764; NATURE_X=740 ;; uz) LANG_Y=886; NATURE_X=764 ;; en) LANG_Y=1009; NATURE_X=635 ;; *) echo "язык: ru, uz или en"; exit 1 ;; esac
+else
+  PKG=kz.black13.kazwall
+  export RAW=store_listing/raw
+  case "$LANG_CODE" in ru) LANG_Y=764; NATURE_X=740 ;; kk) LANG_Y=886; NATURE_X=798 ;; en) LANG_Y=1009; NATURE_X=635 ;; *) echo "язык: ru, kk или en"; exit 1 ;; esac
+fi
 
 tap() { "$ADB" shell input tap "$1" "$2"; sleep "${3:-2}"; }
 back() { "$ADB" shell input keyevent 4; sleep 1; }
@@ -20,7 +30,7 @@ restart() {
   sleep 14
 }
 shot() { if [ -z "$ONLY" ] || [ "$ONLY" = "$1" ]; then tools/shot.sh "$LANG_CODE/$1"; fi; }
-mkdir -p "store_listing/raw/$LANG_CODE"
+mkdir -p "$RAW/$LANG_CODE"
 
 restart
 tap 847 115          # настройки

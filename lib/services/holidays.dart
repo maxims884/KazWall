@@ -1,3 +1,5 @@
+import '../config.dart';
+
 /// Праздники, к которым присылаем уведомление "открытки готовы"
 class Holiday {
   const Holiday(this.id, this.dates);
@@ -6,13 +8,29 @@ class Holiday {
   final String id;
 
   /// "MM-dd" для праздников с постоянной датой или "yyyy-MM-dd" для айтов.
-  /// Даты айтов считаются по лунному календарю и каждый год объявляются муфтиятом (ДУМК) заново,
-  /// поэтому их надо проверять и дописывать на следующие годы. Те же даты — в content_bot/texts.py
+  /// Даты айтов считаются по лунному календарю и каждый год объявляются муфтиятом заново
+  /// (в Казахстане — ДУМК, в Узбекистане — Управление мусульман), поэтому их надо проверять
+  /// и дописывать на следующие годы. Те же даты — в content_bot/countries/kaz.py и uzb.py
   final List<String> dates;
 }
 
 class Holidays {
-  static const list = [
+  static const list = Config.uzb ? _uzbekistan : _kazakhstan;
+
+  static const _uzbekistan = [
+    Holiday('new_year', ['01-01']),
+    Holiday('defender', ['01-14']),
+    Holiday('mar8', ['03-08']),
+    Holiday('navruz', ['03-21']),
+    Holiday('memory', ['05-09']),
+    Holiday('independence', ['09-01']),
+    Holiday('teacher', ['10-01']),
+    Holiday('constitution', ['12-08']),
+    Holiday('ramazon_hayit', ['2027-03-10', '2028-02-27', '2029-02-14', '2030-02-05']),
+    Holiday('qurbon_hayit', ['2027-05-16', '2028-05-05', '2029-04-24', '2030-04-13']),
+  ];
+
+  static const _kazakhstan = [
     Holiday('new_year', ['01-01']),
     Holiday('mar8', ['03-08']),
     Holiday('nauryz', ['03-21']),

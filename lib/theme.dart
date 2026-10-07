@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
 
-/// Цвета флага Казахстана: небесно-бирюзовый и золотой
+import 'config.dart';
+
+/// Цвета флага Казахстана: небесно-бирюзовый и золотой.
+/// У «Узбекистан обои» — синий кобальт самаркандских изразцов, чтобы приложения не путались
 const brandGold = Color(0xFFFFC72C);
 const whatsAppGreen = Color(0xFF25D366);
 
+/// Главная кнопка поверх картинки ("Установить")
+const brandButton = Config.uzb ? Color(0xFF1F5FBF) : Color(0xFF0091AD);
+
 ThemeData buildTheme(Brightness brightness) {
   final dark = brightness == Brightness.dark;
-  final scheme = ColorScheme.fromSeed(seedColor: const Color(0xFF00A3C4), brightness: brightness).copyWith(
-    primary: dark ? const Color(0xFF3CC8E0) : const Color(0xFF007F99),
-    onPrimary: dark ? const Color(0xFF00363F) : Colors.white,
-    primaryContainer: dark ? const Color(0xFF004E5C) : const Color(0xFFC5F0F8),
-    onPrimaryContainer: dark ? const Color(0xFFC5F0F8) : const Color(0xFF00363F),
+  final seed = ColorScheme.fromSeed(
+    seedColor: Config.uzb ? const Color(0xFF1F5FBF) : const Color(0xFF00A3C4),
+    brightness: brightness,
+  );
+  final brand =
+      Config.uzb
+          ? seed.copyWith(
+            primary: dark ? const Color(0xFF8FB8FF) : const Color(0xFF1B55AD),
+            onPrimary: dark ? const Color(0xFF002E6B) : Colors.white,
+            primaryContainer: dark ? const Color(0xFF0E4391) : const Color(0xFFD7E3FF),
+            onPrimaryContainer: dark ? const Color(0xFFD7E3FF) : const Color(0xFF001B40),
+          )
+          : seed.copyWith(
+            primary: dark ? const Color(0xFF3CC8E0) : const Color(0xFF007F99),
+            onPrimary: dark ? const Color(0xFF00363F) : Colors.white,
+            primaryContainer: dark ? const Color(0xFF004E5C) : const Color(0xFFC5F0F8),
+            onPrimaryContainer: dark ? const Color(0xFFC5F0F8) : const Color(0xFF00363F),
+          );
+  final scheme = brand.copyWith(
     surface: dark ? const Color(0xFF1A1D20) : Colors.white,
     surfaceContainerHigh: dark ? const Color(0xFF25292D) : const Color(0xFFE7ECEF),
     onSurface: dark ? const Color(0xFFF1F3F4) : const Color(0xFF1A1C1E),

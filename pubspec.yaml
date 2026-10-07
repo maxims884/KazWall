@@ -65,11 +65,28 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  # Что собирать, если --flavor не указан: kaz — «Казахстан обои», uzb — «Узбекистан обои»
+  default-flavor: kaz
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  # Шрифты для своего текста на открытке — те же, что у бота в content_bot/fonts (лицензия OFL)
+  fonts:
+    - family: Lobster
+      fonts:
+        - asset: assets/fonts/Lobster.ttf
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat.ttf
+    - family: Pacifico
+      fonts:
+        - asset: assets/fonts/Pacifico.ttf
+    - family: Caveat
+      fonts:
+        - asset: assets/fonts/Caveat.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

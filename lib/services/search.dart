@@ -1,3 +1,4 @@
+import '../config.dart';
 import '../models/picture.dart';
 import 'catalog.dart';
 
@@ -6,7 +7,42 @@ import 'catalog.dart';
 class Search {
   static const prefix = 'search:';
 
-  static const _keywords = <String, List<String>>{
+  static const _keywords = Config.uzb ? _uzbekistan : _kazakhstan;
+
+  static const _uzbekistan = <String, List<String>>{
+    'nature': [
+      'природа', 'пейзаж', 'горы', 'озеро', 'лес', 'река', 'небо', 'закат', 'пустыня', 'цветы',
+      'tabiat', 'manzara', 'tog‘', 'ko‘l', 'o‘rmon', 'daryo', 'osmon', 'shafaq', 'cho‘l', 'gul',
+      'nature', 'landscape', 'mountains', 'lake', 'forest', 'river', 'sky', 'sunset', 'desert', 'flowers',
+    ],
+    'animals': [
+      'животные', 'лошадь', 'конь', 'верблюд', 'птица', 'аист', 'бабочка',
+      'hayvonlar', 'ot', 'tuya', 'qush', 'laylak', 'kapalak',
+      'animals', 'horse', 'camel', 'bird', 'stork', 'butterfly',
+    ],
+    'arch': [
+      'архитектура', 'здание', 'город', 'ташкент', 'самарканд', 'бухара', 'хива', 'регистан', 'площадь', 'памятник',
+      'me’morchilik', 'bino', 'shahar', 'toshkent', 'samarqand', 'buxoro', 'xiva', 'registon', 'maydon', 'haykal',
+      'architecture', 'building', 'city', 'tashkent', 'samarkand', 'bukhara', 'khiva', 'registan', 'square',
+    ],
+    'relig': [
+      'религия', 'мечеть', 'медресе', 'минарет', 'ислам', 'коран', 'намаз', 'мавзолей', 'церковь',
+      'din', 'masjid', 'madrasa', 'minora', 'islom', 'qur’on', 'namoz', 'maqbara', 'cherkov',
+      'religion', 'mosque', 'madrasah', 'minaret', 'islam', 'quran', 'mausoleum', 'church',
+    ],
+    'culture': [
+      'традиции', 'культура', 'национальный', 'орнамент', 'керамика', 'базар', 'плов', 'ковер', 'сюзане',
+      'an’ana', 'madaniyat', 'milliy', 'naqsh', 'kulolchilik', 'bozor', 'osh', 'palov', 'gilam', 'so‘zana',
+      'traditions', 'culture', 'traditional', 'ornament', 'ceramics', 'bazaar', 'plov', 'carpet', 'suzani',
+    ],
+    Catalog.cards: [
+      'открытка', 'поздравление', 'праздник', 'хайит', 'навруз', 'жума', 'день рождения',
+      'tabriknoma', 'otkritka', 'tabrik', 'bayram', 'hayit', 'navro‘z', 'juma', 'tug‘ilgan kun',
+      'card', 'greeting', 'holiday', 'birthday', 'eid', 'navruz', 'friday',
+    ],
+  };
+
+  static const _kazakhstan = <String, List<String>>{
     'nature': [
       'природа', 'пейзаж', 'горы', 'озеро', 'лес', 'река', 'небо', 'закат', 'степь', 'каньон',
       'табиғат', 'тау', 'көл', 'орман', 'өзен', 'аспан', 'дала', 'шатқал',
@@ -39,7 +75,9 @@ class Search {
     ],
   };
 
-  static String _normalize(String text) => text.toLowerCase().replaceAll('ё', 'е').trim();
+  // В узбекских словах апостроф набирают по-разному (o‘, o', oʻ) — при сравнении его не учитываем
+  static String _normalize(String text) =>
+      text.toLowerCase().replaceAll('ё', 'е').replaceAll(RegExp('[\'`‘’ʻʼ]'), '').trim();
 
   static int _commonPrefix(String a, String b) {
     var i = 0;
@@ -66,9 +104,10 @@ class Search {
     if (words.isEmpty) return [];
     final byTags = <Picture>[];
     final byCategory = <Picture>[];
+    final byType = {for (final entry in _keywords.entries) entry.key: entry.value.map(_normalize).toList()};
     for (final picture in pictures) {
       final tags = picture.tags.map(_normalize).toList();
-      final keywords = _keywords[picture.type] ?? const [];
+      final keywords = byType[picture.type] ?? const [];
       if (words.every((w) => _matches(tags, w))) {
         byTags.add(picture);
       } else if (words.every((w) => _matches(tags, w) || _matches(keywords, w))) {
