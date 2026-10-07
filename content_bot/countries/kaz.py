@@ -76,6 +76,37 @@ COMMONS_QUERIES = {
     ],
 }
 
+# Флаг для обоев с флагом (flags.py): файл на Commons и где по ширине флага его главный символ
+FLAG_FILE = "Flag_of_Kazakhstan.svg"
+FLAG_FOCUS = 0.5
+FLAG_TAGS = ["Flag", "флаг", "ту", "байрақ", "Казахстан", "Қазақстан"]
+
+# Особая подборка: яркие, колоритные кадры. Ключ — категория приложения, куда они попадут.
+# Отбор у неё нестрогий (люди, еда, базары и праздники разрешены), но цвета должны быть насыщенными
+SPECIAL_QUERIES = {
+    "colorful": {
+        "nature": [
+            'deepcat:"Sunsets of Kazakhstan" filew:>1800',
+            'deepcat:"Autumn in Kazakhstan" filew:>1800',
+            'deepcat:"Tulips in Kazakhstan" filew:>1800',
+        ],
+        "culture": [
+            'deepcat:"Nowruz in Kazakhstan" filew:>1800',
+            'deepcat:"Traditional clothing of Kazakhstan" filew:>1800',
+            'deepcat:"Kazakh yurts" filew:>1800',
+            'deepcat:"Yurts in Kazakhstan" filew:>1800',
+            'deepcat:"Markets in Kazakhstan" filew:>1800',
+            'deepcat:"Horse riding in Kazakhstan" filew:>1800',
+            'deepcat:"Kazakh ornaments" filew:>1800',
+        ],
+        "arch": [
+            'deepcat:"Views of Astana" filew:>1800',
+            'deepcat:"Views of Almaty" filew:>1800',
+            'deepcat:"Skyscrapers in Astana" filew:>1800',
+        ],
+    },
+}
+
 # В категорию фото попадает, только если в его названии или категориях Commons есть одно из этих слов.
 # Иначе deepcat приносит всё подряд: в "пейзажах" оказываются люки и заборы
 REQUIRE_WORDS = {
@@ -98,6 +129,7 @@ REQUIRE_WORDS = {
 
 # Перевод частых тегов, чтобы поиск в приложении находил их по-русски и по-казахски
 TAG_TRANSLATIONS = {
+    "flag": ["флаг", "ту"],
     "lake": ["озеро", "көл"], "mountain": ["горы", "тау"], "river": ["река", "өзен"],
     "astana": ["Астана"], "almaty": ["Алматы"], "shymkent": ["Шымкент"], "turkistan": ["Туркестан", "Түркістан"],
     "turkestan": ["Туркестан", "Түркістан"], "aktau": ["Актау", "Ақтау"],

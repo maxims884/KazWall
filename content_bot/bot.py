@@ -8,6 +8,8 @@ catalog.json лежат в ветке content репозитория на GitHub
     python bot.py seed-cards --count 30  # первичное заполнение открыток
     python bot.py wallpapers --count 5   # добавить несколько обоев сразу
     python bot.py wallpapers --count 5 --type arch   # …в одну категорию
+    python bot.py wallpapers --count 5 --type flag   # …обои с флагом страны (бот рисует их сам, flags.py)
+    python bot.py wallpapers --count 5 --type colorful   # …яркие, колоритные кадры
     python bot.py cards nauryz birthday  # открытки к выбранным поводам (названия — в texts.py)
     python bot.py remove <id> [<id>…]    # убрать картинки из приложения (второй раз бот их не возьмёт)
 
@@ -26,16 +28,25 @@ import random
 import sys
 import time
 
-from PIL import Image
+from PIL import Image, ImageStat
 
 import cards
 import country
+import flags
 import sources
 import texts
 
 WALLPAPER_TYPES = ["nature", "animals", "arch", "relig", "culture"]
+# Кроме категорий приложения: "flag" — обои с флагом, их бот рисует сам (flags.py);
+# "colorful" — яркие, колоритные кадры (запросы — SPECIAL_QUERIES страны).
+# В приложении и те и другие попадают в обычные категории
+SPECIAL = ["flag", "colorful"]
 # В каком порядке пополняются категории: природы больше всего, остальные по очереди
-ROTATION = ["nature", "arch", "nature", "animals", "nature", "relig", "nature", "culture", "arch", "animals"]
+ROTATION = ["nature", "arch", "colorful", "nature", "animals", "flag", "nature", "relig", "colorful",
+            "nature", "culture", "arch", "animals"]
+# Насколько насыщенными должны быть цвета "яркого" кадра: средняя насыщенность, 0–255
+MIN_SATURATION = 85
+MIN_BRIGHTNESS = 105
 HERE = os.path.dirname(os.path.abspath(__file__))
 MAX_PIXELS = 4_000_000  # ~1600x2500: хватает для экрана телефона, файл ~500 КБ
 THUMB_WIDTH = 480       # миниатюра для сетки, ~30 КБ
@@ -133,16 +144,44 @@ def prepare(image):
     return jpeg(image, 80), jpeg(small, 72), image.size
 
 
+def is_vivid(image):
+    """Яркий кадр: цвета насыщенные, и сам он не тёмный (у ночных снимков насыщенность тоже высокая)"""
+    hue, saturation, value = ImageStat.Stat(image.convert("RGB").resize((64, 64)).convert("HSV")).mean
+    return saturation >= MIN_SATURATION and value >= MIN_BRIGHTNESS
+
+
+def add_flag(store, rnd):
+    try:
+        image, fields, item_id = flags.make(store, rnd)
+    except Exception as e:
+        print("флаг: не получилось", e)
+        return False
+    main, small, size = prepare(image)
+    print("обои: флаг", item_id)
+    store.add("culture", file_name("wall", item_id), main, small, size, fields, item_id)
+    return True
+
+
 def add_wallpaper(store, today, picture_type=None):
     picture_type = picture_type or ROTATION[store.counter % len(ROTATION)]
     store.counter += 1
     rnd = random.Random("%s-%d" % (today.isoformat(), store.counter))
-    candidates = [c for c in sources.commons_candidates(picture_type, store.used, limit=40, rnd=rnd)
+    if picture_type == "flag":
+        return add_flag(store, rnd)
+    special = picture_type if picture_type in SPECIAL else None
+    if special:
+        # У подборки свои запросы для нескольких категорий приложения — берём одну из них
+        picture_type = rnd.choice(sorted(country.data.SPECIAL_QUERIES[special]))
+    candidates = [c for c in sources.commons_candidates(picture_type, store.used, limit=40, rnd=rnd, special=special)
                   if store.series.get(c["series"], 0) < MAX_PER_SERIES]
     rnd.shuffle(candidates)
     for item in candidates:
         try:
             image = Image.open(io.BytesIO(sources.download(item["download"])))
+            if special == "colorful" and not is_vivid(image):
+                print("  блёклый кадр", item["id"])
+                store.used.add(item["id"])
+                continue
             main, small, size = prepare(image)
         except Exception as e:
             print("  не скачалось", item["id"], e)
@@ -209,7 +248,7 @@ def main():
     parser.add_argument("command", choices=["daily", "daily-cards", "seed-cards", "wallpapers", "cards", "remove"])
     parser.add_argument("ids", nargs="*")
     parser.add_argument("--count", type=int, default=30)
-    parser.add_argument("--type", choices=WALLPAPER_TYPES)
+    parser.add_argument("--type", choices=WALLPAPER_TYPES + SPECIAL)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--country", choices=country.NAMES, default=country.DEFAULT)
     args = parser.parse_args()

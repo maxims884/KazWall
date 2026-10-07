@@ -116,8 +116,49 @@ COMMONS_QUERIES = {
     ],
 }
 
+# Флаг для обоев с флагом (flags.py): файл на Commons и где по ширине флага его главный символ
+FLAG_FILE = "Flag_of_Uzbekistan.svg"
+FLAG_FOCUS = 0.2
+FLAG_TAGS = ["Flag", "флаг", "bayroq", "Узбекистан", "O‘zbekiston"]
+
+# Особая подборка: яркие, колоритные кадры. Ключ — категория приложения, куда они попадут.
+# Отбор у неё нестрогий (люди, еда, базары и праздники разрешены), но цвета должны быть насыщенными
+SPECIAL_QUERIES = {
+    "colorful": {
+        "nature": [
+            'deepcat:"Sunsets of Uzbekistan" filew:>1800',
+            'deepcat:"Winter in Uzbekistan" filew:>1800',
+        ],
+        "culture": [
+            'deepcat:"Bazaars in Uzbekistan" filew:>1800',
+            'deepcat:"Chorsu Bazaar" filew:>1800',
+            'deepcat:"Siyob Bazaar" filew:>1800',
+            'deepcat:"Ceramics of Uzbekistan" filew:>1800',
+            'deepcat:"Textiles of Uzbekistan" filew:>1800',
+            'deepcat:"Silk in Uzbekistan" filew:>1800',
+            'deepcat:"Souvenirs of Uzbekistan" filew:>1800',
+            'deepcat:"Traditional clothing of Uzbekistan" filew:>1800',
+            'deepcat:"Festivals in Uzbekistan" filew:>1800',
+            'deepcat:"Nowruz in Uzbekistan" filew:>1800',
+            'deepcat:"Dance of Uzbekistan" filew:>1800',
+            'deepcat:"Cuisine of Uzbekistan" filew:>1800',
+            'deepcat:"Fruit of Uzbekistan" filew:>1800',
+            'deepcat:"Tiles in Uzbekistan" filew:>1800',
+            'deepcat:"Ceilings in Uzbekistan" filew:>1800',
+        ],
+        "arch": [
+            'deepcat:"Night in Samarkand" filew:>1800',
+            'deepcat:"Registan at night" filew:>1800',
+            'deepcat:"Night in Tashkent" filew:>1800',
+            'deepcat:"Registan" filew:>1800',
+            'deepcat:"Shah-i-Zinda" filew:>1800',
+        ],
+    },
+}
+
 # Перевод частых тегов, чтобы поиск в приложении находил их по-русски и по-узбекски
 TAG_TRANSLATIONS = {
+    "flag": ["флаг", "bayroq"],
     "tashkent": ["Ташкент", "Toshkent"], "samarkand": ["Самарканд", "Samarqand"],
     "bukhara": ["Бухара", "Buxoro"], "khiva": ["Хива", "Xiva"], "kokand": ["Коканд", "Qo‘qon"],
     "shahrisabz": ["Шахрисабз", "Shahrisabz"], "termez": ["Термез", "Termiz"],

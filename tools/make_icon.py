@@ -1,7 +1,7 @@
 """Рисует иконку приложения.
 
     python tools/make_icon.py          # «Казахстан обои»: золотое солнце над снежными горами на бирюзовом фоне
-    python tools/make_icon.py uzb      # «Узбекистан обои»: бирюзовый купол под полумесяцем на синем фоне
+    python tools/make_icon.py uzb      # «Узбекистан обои»: флаг Узбекистана
 
 Кладёт значки всех размеров в android/app/src/main/res и 512×512 для Google Play в store_listing
 (для Узбекистана — в android/app/src/uzb/res и store_listing/uzb).
@@ -16,7 +16,7 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 UZB = sys.argv[1:] == ["uzb"]
 RES = os.path.join(ROOT, "android", "app", "src", "uzb" if UZB else "main", "res")
 STORE = os.path.join(ROOT, "store_listing", "uzb") if UZB else os.path.join(ROOT, "store_listing")
-SKY_TOP, SKY_BOTTOM = ((16, 58, 150), (64, 140, 222)) if UZB else ((0, 163, 196), (64, 205, 226))
+SKY_TOP, SKY_BOTTOM = (0, 163, 196), (64, 205, 226)
 GOLD = (255, 199, 44)
 S = 1024  # рисуем крупно, потом уменьшаем — так края гладкие
 
@@ -30,66 +30,48 @@ def sky(size):
     return image.convert("RGBA")
 
 
-def dome(size, scale):
-    """Купол самаркандского медресе с полумесяцем и звёздами, как на флаге Узбекистана"""
+# Цвета флага Узбекистана
+UZ_BLUE, UZ_RED, UZ_GREEN = (0, 153, 181), (206, 17, 38), (30, 181, 58)
+
+
+def flag_stripes(size, box):
+    """Полосы флага Узбекистана. box — какую долю холста видно: у адаптивной иконки края обрезает маска,
+    поэтому полосы размечены по видимой середине, а крайние уходят за неё"""
+    image = Image.new("RGBA", (size, size), UZ_GREEN + (255,))
+    draw = ImageDraw.Draw(image)
+    top, side = size * (1 - box) / 2, size * box
+    draw.rectangle((0, 0, size, top + side * 0.47), fill=UZ_RED)
+    draw.rectangle((0, 0, size, top + side * 0.44), fill=UZ_BLUE)
+    draw.rectangle((0, top + side * 0.47, size, top + side * 0.63), fill="white")
+    draw.rectangle((0, top + side * 0.63, size, top + side * 0.66), fill=UZ_RED)
+    return image
+
+
+def flag_symbols(size, box):
+    """Полумесяц и двенадцать звёзд на синей полосе"""
     layer = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(layer)
-    c = size / 2
-    u = size * scale / 2
-    sand, sand_dark, tile, tile_dark = (238, 208, 158), (205, 168, 112), (40, 196, 204), (16, 146, 164)
-
-    # Полумесяц и три звезды слева вверху
-    mx, my, mr = c - u * 0.50, c - u * 0.52, u * 0.22
+    left = top = size * (1 - box) / 2
+    side = size * box
+    mx, my, mr = left + side * 0.27, top + side * 0.23, side * 0.125
     draw.ellipse((mx - mr, my - mr, mx + mr, my + mr), fill="white")
-    draw.ellipse((mx - mr * 0.45, my - mr * 0.95, mx + mr * 1.35, my + mr * 0.85), fill=(0, 0, 0, 0))
-    for sx, sy, r in ((c + u * 0.02, c - u * 0.74, 0.060), (c + u * 0.46, c - u * 0.60, 0.075),
-                      (c + u * 0.70, c - u * 0.22, 0.055)):
-        points = []
-        for i in range(10):
-            a = -math.pi / 2 + math.pi * i / 5
-            rr = u * r * (1 if i % 2 == 0 else 0.42)
-            points.append((sx + rr * math.cos(a), sy + rr * math.sin(a)))
-        draw.polygon(points, fill="white")
-
-    # Купол: чуть шире барабана и сходится в остриё
-    base, top, radius = c + u * 0.34, c - u * 0.42, u * 0.44
-    profile = []
-    for i in range(61):
-        h = i / 60
-        w = radius * (0.88 + 0.24 * math.sin(math.pi * min(h / 0.55, 1))) * math.cos(h * math.pi / 2) ** 0.62
-        profile.append((w, base - (base - top) * h))
-    draw.polygon([(c - w, y) for w, y in profile] + [(c + w, y) for w, y in reversed(profile)], fill=tile)
-    # Рёбра купола
-    for k in (-0.62, -0.22, 0.22, 0.62):
-        draw.line([(c + w * k, y) for w, y in profile], fill=tile_dark, width=max(2, int(u * 0.022)))
-    # Шпиль
-    draw.line([(c, top + u * 0.02), (c, top - u * 0.16)], fill=GOLD, width=max(2, int(u * 0.03)))
-    draw.ellipse((c - u * 0.045, top - u * 0.13, c + u * 0.045, top - u * 0.04), fill=GOLD)
-
-    # Барабан с поясом изразцов и стена с аркой; низ уходит за край холста — маска иконки обрежет
-    draw.rectangle((c - radius * 0.94, base - u * 0.01, c + radius * 0.94, base + u * 0.22), fill=sand)
-    draw.rectangle((c - radius * 0.94, base + u * 0.05, c + radius * 0.94, base + u * 0.13), fill=(27, 85, 173))
-    for i in range(7):
-        x = c - radius * 0.94 + radius * 1.88 * (i + 0.5) / 7
-        d = u * 0.028
-        draw.polygon([(x, base + u * 0.09 - d), (x + d, base + u * 0.09), (x, base + u * 0.09 + d),
-                      (x - d, base + u * 0.09)], fill=GOLD)
-    wall = base + u * 0.22
-    draw.rectangle((c - u * 0.86, wall, c + u * 0.86, size), fill=sand)
-    draw.rectangle((c - u * 0.86, wall, c + u * 0.86, wall + u * 0.05), fill=sand_dark)
-    # Стрельчатая арка
-    arch_w, arch_top, spring = u * 0.27, wall + u * 0.16, wall + u * 0.46
-    side = [(arch_w * math.cos(t * math.pi / 40) ** 0.75, spring - (spring - arch_top) * math.sin(t * math.pi / 40))
-            for t in range(21)]
-    draw.polygon([(c - arch_w, size)] + [(c - x, y) for x, y in side] + [(c + x, y) for x, y in reversed(side)]
-                 + [(c + arch_w, size)], fill=(27, 85, 173))
+    draw.ellipse((mx - mr * 0.55, my - mr * 0.92, mx + mr * 1.3, my + mr * 0.92), fill=(0, 0, 0, 0))
+    # Звёзды в три ряда: 3, 4 и 5, выровнены по правому краю
+    for row, count in enumerate((3, 4, 5)):
+        for i in range(count):
+            sx = left + side * (0.73 - 0.082 * i)
+            sy = top + side * (0.13 + 0.10 * row)
+            points = []
+            for k in range(10):
+                angle = -math.pi / 2 + math.pi * k / 5
+                r = side * (0.033 if k % 2 == 0 else 0.014)
+                points.append((sx + r * math.cos(angle), sy + r * math.sin(angle)))
+            draw.polygon(points, fill="white")
     return layer
 
 
 def artwork(size, scale):
     """Солнце и горы на прозрачном фоне; scale — какую долю холста занимает рисунок"""
-    if UZB:
-        return dome(size, scale)
     layer = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(layer)
     c = size / 2
@@ -135,14 +117,15 @@ def save(image, folder, name, size):
 
 def main():
     # Обычная иконка (старые Android и Google Play): скруглённый квадрат
-    full = Image.alpha_composite(sky(S), artwork(S, 0.86))
+    full = Image.alpha_composite(flag_stripes(S, 1), flag_symbols(S, 1)) if UZB else         Image.alpha_composite(sky(S), artwork(S, 0.86))
     mask = Image.new("L", (S, S), 0)
     ImageDraw.Draw(mask).rounded_rectangle((0, 0, S - 1, S - 1), int(S * 0.22), fill=255)
     rounded = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     rounded.paste(full, (0, 0), mask)
     # Адаптивная иконка: рисунок помещается в безопасную середину, фон заливает всё
-    foreground = artwork(S, 0.56)
-    background = sky(S)
+    # (видимая часть адаптивной иконки — средние две трети холста)
+    foreground = flag_symbols(S, 2 / 3) if UZB else artwork(S, 0.56)
+    background = flag_stripes(S, 2 / 3) if UZB else sky(S)
 
     for density, legacy, adaptive in (("mdpi", 48, 108), ("hdpi", 72, 162), ("xhdpi", 96, 216),
                                       ("xxhdpi", 144, 324), ("xxxhdpi", 192, 432)):

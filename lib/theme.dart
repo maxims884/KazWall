@@ -3,26 +3,35 @@ import 'package:flutter/material.dart';
 import 'config.dart';
 
 /// Цвета флага Казахстана: небесно-бирюзовый и золотой.
-/// У «Узбекистан обои» — синий кобальт самаркандских изразцов, чтобы приложения не путались
-const brandGold = Color(0xFFFFC72C);
+/// У «Узбекистан обои» — цвета флага Узбекистана: голубой, зелёный и красный
+const uzBlue = Color(0xFF0099B5);
+const uzGreen = Color(0xFF1EB53A);
+const uzRed = Color(0xFFCE1126);
+
+/// Отмеченное сердечко избранного
+const brandGold = Config.uzb ? Color(0xFFFF4D5E) : Color(0xFFFFC72C);
 const whatsAppGreen = Color(0xFF25D366);
 
 /// Главная кнопка поверх картинки ("Установить")
-const brandButton = Config.uzb ? Color(0xFF1F5FBF) : Color(0xFF0091AD);
+const brandButton = Config.uzb ? Color(0xFF17973A) : Color(0xFF0091AD);
 
 ThemeData buildTheme(Brightness brightness) {
   final dark = brightness == Brightness.dark;
   final seed = ColorScheme.fromSeed(
-    seedColor: Config.uzb ? const Color(0xFF1F5FBF) : const Color(0xFF00A3C4),
+    seedColor: Config.uzb ? uzBlue : const Color(0xFF00A3C4),
     brightness: brightness,
   );
   final brand =
       Config.uzb
           ? seed.copyWith(
-            primary: dark ? const Color(0xFF8FB8FF) : const Color(0xFF1B55AD),
-            onPrimary: dark ? const Color(0xFF002E6B) : Colors.white,
-            primaryContainer: dark ? const Color(0xFF0E4391) : const Color(0xFFD7E3FF),
-            onPrimaryContainer: dark ? const Color(0xFFD7E3FF) : const Color(0xFF001B40),
+            primary: dark ? const Color(0xFF4CC4DC) : const Color(0xFF007C94),
+            onPrimary: dark ? const Color(0xFF00363F) : Colors.white,
+            primaryContainer: dark ? const Color(0xFF004E5C) : const Color(0xFFC3EEF7),
+            onPrimaryContainer: dark ? const Color(0xFFC3EEF7) : const Color(0xFF00363F),
+            // Зелёный флага — второй цвет: полоска под выбранной вкладкой и кнопка "Установить"
+            secondary: dark ? const Color(0xFF5FD97A) : const Color(0xFF17973A),
+            onSecondary: dark ? const Color(0xFF00390F) : Colors.white,
+            error: dark ? const Color(0xFFFF8A93) : uzRed,
           )
           : seed.copyWith(
             primary: dark ? const Color(0xFF3CC8E0) : const Color(0xFF007F99),
@@ -54,7 +63,7 @@ ThemeData buildTheme(Brightness brightness) {
     tabBarTheme: TabBarThemeData(
       labelColor: scheme.primary,
       unselectedLabelColor: scheme.onSurfaceVariant,
-      indicatorColor: scheme.primary,
+      indicatorColor: Config.uzb ? scheme.secondary : scheme.primary,
       dividerColor: Colors.transparent,
       labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
       unselectedLabelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),

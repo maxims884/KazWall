@@ -115,11 +115,14 @@ def _search(query, offset):
     return {}
 
 
-def commons_candidates(picture_type, used, limit=10, rnd=random):
-    """Свободные по лицензии и ещё не использованные фото с Commons для категории приложения"""
+def commons_candidates(picture_type, used, limit=10, rnd=random, special=None):
+    """Свободные по лицензии и ещё не использованные фото с Commons для категории приложения.
+
+    special — особая подборка из SPECIAL_QUERIES страны, сейчас одна: "colorful" (яркие, колоритные кадры)"""
     found = []
     # Запросы каждый раз в новом порядке, чтобы в приложении чередовались разные места
-    queries = list(country.data.COMMONS_QUERIES[picture_type])
+    queries = list(country.data.SPECIAL_QUERIES[special][picture_type] if special
+                   else country.data.COMMONS_QUERIES[picture_type])
     rnd.shuffle(queries)
     # Два прохода: сначала отобранные сообществом "качественные изображения", потом остальные
     for suffix in (BEST, ""):
@@ -136,7 +139,7 @@ def commons_candidates(picture_type, used, limit=10, rnd=random):
                     break
                 for page in sorted(pages.values(), key=lambda p: p.get("index", 0)):
                     # Без отметки качества берём только крупные снимки: мелкие — обычно старые "мыльницы"
-                    item = _commons_item(page, picture_type, min_side=1200 if suffix else 2000)
+                    item = _commons_item(page, picture_type, 1200 if suffix else 2000, special)
                     if item and item["id"] not in used and item["id"] not in [f["id"] for f in found]:
                         found.append(item)
                 if "continue" not in data:
@@ -147,7 +150,7 @@ def commons_candidates(picture_type, used, limit=10, rnd=random):
     return found
 
 
-def _commons_item(page, picture_type, min_side=1200):
+def _commons_item(page, picture_type, min_side=1200, special=None):
     info = (page.get("imageinfo") or [{}])[0]
     meta = info.get("extmetadata", {})
     value = lambda key: meta.get(key, {}).get("value", "")
@@ -167,7 +170,7 @@ def _commons_item(page, picture_type, min_side=1200):
     text = " ".join(categories + [title]).lower()
     if ADULT_WORDS.search(text):
         return None
-    if country.data.STRICT:
+    if country.data.STRICT and not special:
         if "personality" in value("Restrictions").lower():
             return None
         if any(w in text for w in PEOPLE_WORDS) or any(w in text for w in JUNK_WORDS):
@@ -179,7 +182,8 @@ def _commons_item(page, picture_type, min_side=1200):
         if any(w in text for w in NOT_PHOTO_WORDS):
             return None
         # deepcat заходит и в соседние страны: общие горы и реки лежат в категориях обеих
-        if any(w in text for w in country.data.FOREIGN_WORDS) and country.data.TITLE.lower() not in text:
+        foreign = getattr(country.data, "FOREIGN_WORDS", ())
+        if any(w in text for w in foreign) and country.data.TITLE.lower() not in text:
             return None
         if picture_type == "nature" and any(w in text for w in BUILDING_WORDS):
             return None

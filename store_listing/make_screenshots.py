@@ -84,10 +84,10 @@ def font(name, size, variation=None):
 
 
 def background(size):
-    """Тёмно-бирюзовый градиент с мягким свечением сверху — цвета флага; у Узбекистана — синий кобальт"""
+    """Тёмно-бирюзовый градиент с мягким свечением сверху — цвета флага; у Узбекистана внизу зелёный"""
     w, h = size
-    top, bottom = ((20, 62, 150), (7, 14, 38)) if UZB else ((0, 96, 118), (6, 22, 28))
-    glow_color = (64, 140, 222) if UZB else (0, 175, 202)
+    top, bottom = ((0, 104, 124), (8, 58, 26)) if UZB else ((0, 96, 118), (6, 22, 28))
+    glow_color = (0, 170, 200) if UZB else (0, 175, 202)
     bg = Image.new("RGB", size)
     draw = ImageDraw.Draw(bg)
     for y in range(h):
