@@ -1,5 +1,5 @@
 {
-"counter": 149,
+"counter": 150,
 "series": {
 "большаябелаяцапляозерокараколь": 1,
 "жаркентдунганскаямечетьсеверныеворотабар": 1,
@@ -139,7 +139,8 @@
 "independencemonumentrepubicsquarealmaty": 1,
 "алматыпроспектсейфуллинасверху": 1,
 "киізүй": 1,
-"petroglyphsintamgalykazakhstan": 1
+"petroglyphsintamgalykazakhstan": 1,
+"вдолинезамков": 1
 },
 "used": [
 "commons-104186558",
@@ -154,6 +155,7 @@
 "commons-119839944",
 "commons-119841322",
 "commons-119841817",
+"commons-120013832",
 "commons-120182427",
 "commons-120290348",
 "commons-120402628",
@@ -302,6 +304,7 @@
 "openverse-2a4c192b-3bb3-4d2d-b800-6bf644b2cb86",
 "openverse-31044202-5b67-48fb-b65e-8fd455c515e9",
 "openverse-32ffe18f-92b8-4cc0-9a15-25e3ab5e040b",
+"openverse-36847d5e-532a-49cd-94b6-1036e6f0efca",
 "openverse-3ef6271a-00d1-4574-bb16-4c61602bf7e3",
 "openverse-41f242f0-5b49-49fe-b671-f0f3677f694a",
 "openverse-4ade4fa7-6dbb-4b1e-84ac-5fc5cfd54875",
