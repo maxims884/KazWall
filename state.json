@@ -1,5 +1,5 @@
 {
-"counter": 151,
+"counter": 152,
 "series": {
 "большаябелаяцапляозерокараколь": 1,
 "жаркентдунганскаямечетьсеверныеворотабар": 1,
@@ -141,7 +141,8 @@
 "киізүй": 1,
 "petroglyphsintamgalykazakhstan": 1,
 "вдолинезамков": 1,
-"mausoleumofkhodjaahmedyasawi": 1
+"mausoleumofkhodjaahmedyasawi": 1,
+"kazakhjewelry": 1
 },
 "used": [
 "commons-104186558",
@@ -169,6 +170,7 @@
 "commons-129445427",
 "commons-129450298",
 "commons-129683413",
+"commons-130230483",
 "commons-132631057",
 "commons-133113496",
 "commons-133182337",
@@ -319,6 +321,7 @@
 "openverse-73e9889e-59ad-46e6-bcf2-b1d09484ca39",
 "openverse-80892bed-ed3a-43ae-97ce-b60eee42586f",
 "openverse-87fd1183-2de1-4ffd-8b87-e31fb0044cc7",
+"openverse-887723ab-d245-4c3a-ae40-13871296079c",
 "openverse-89b42901-c9e5-45e9-bedf-d9209be29bbc",
 "openverse-914d8957-2e12-41eb-b64e-0f27ce161af7",
 "openverse-917ec2c1-e6e1-46f2-a120-79ffc6b2095a",
