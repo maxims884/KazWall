@@ -41,11 +41,10 @@ class Config {
   static const _testBanner = 'ca-app-pub-3940256099942544/9214589741';
   static const _testNative = 'ca-app-pub-3940256099942544/2247696110';
   static const _testInterstitial = 'ca-app-pub-3940256099942544/1033173712';
-  // У «Узбекистан обои» своих блоков пока нет — стоят тестовые. Перед публикацией завести в AdMob
-  // приложение uz.black13.uzbwall и вписать его блоки сюда, а идентификатор — в build.gradle.kts
-  static const _uzbBanner = _testBanner;
-  static const _uzbNative = _testNative;
-  static const _uzbInterstitial = _testInterstitial;
+  // Блоки «Узбекистан обои»
+  static const _uzbBanner = 'ca-app-pub-2230097402282612/9579377008';
+  static const _uzbNative = 'ca-app-pub-2230097402282612/3032570940';
+  static const _uzbInterstitial = 'ca-app-pub-2230097402282612/7107547323';
 
   static const bannerAdUnit =
       !kReleaseMode

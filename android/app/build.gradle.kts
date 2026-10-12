@@ -31,7 +31,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = 23
+        minSdk = 24
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -49,8 +49,7 @@ android {
         create("uzb") {
             dimension = "country"
             applicationId = "uz.black13.uzbwall"
-            // Пока это тестовый идентификатор Google: перед публикацией вписать свой из AdMob
-            manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-2230097402282612~1043692691"
         }
     }
 

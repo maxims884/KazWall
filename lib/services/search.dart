@@ -98,22 +98,61 @@ class Search {
     (phrase) => phrase.split(RegExp('[ -]')).any((w) => _similar(w, word)) || phrase.startsWith(word),
   );
 
-  /// Сначала картинки, у которых совпали теги, потом совпавшие по категории
+  // Сколько картинок показывать, когда точных совпадений нет
+  static const _fallbackCount = 30;
+
+  static Set<String> _pairs(String word) => {for (var i = 0; i + 1 < word.length; i++) word.substring(i, i + 2)};
+
+  // Насколько слова похожи, 0…1: доля общих пар соседних букв. "самарканд" и "самаркант" — 0.875
+  static double _closeness(String a, String b) {
+    final first = _pairs(a), second = _pairs(b);
+    if (first.isEmpty || second.isEmpty) return a.isNotEmpty && b.startsWith(a) ? 0.5 : 0;
+    return 2 * first.intersection(second).length / (first.length + second.length);
+  }
+
+  /// Поиск всегда что-то показывает. Сначала картинки, у которых с запросом совпали теги, потом совпавшие
+  /// по категории. Если таких нет — те, где нашлось хотя бы одно слово; нет и их — самые похожие
+  /// по написанию (опечатка, другое окончание); а если запрос ни на что не похож — просто новые картинки.
   static List<Picture> filter(List<Picture> pictures, String query) {
-    final words = _normalize(query).split(' ').where((w) => w.length >= 2).toList();
-    if (words.isEmpty) return [];
+    final text = _normalize(query);
+    if (text.isEmpty) return [];
+    var words = text.split(' ').where((w) => w.length >= 2).toList();
+    // Одна буква — тоже запрос
+    if (words.isEmpty) words = [text.replaceAll(' ', '')];
     final byTags = <Picture>[];
     final byCategory = <Picture>[];
+    final partly = <Picture>[];
+    final scores = <Picture, double>{};
     final byType = {for (final entry in _keywords.entries) entry.key: entry.value.map(_normalize).toList()};
     for (final picture in pictures) {
       final tags = picture.tags.map(_normalize).toList();
-      final keywords = byType[picture.type] ?? const [];
+      final keywords = byType[picture.type] ?? const <String>[];
       if (words.every((w) => _matches(tags, w))) {
         byTags.add(picture);
       } else if (words.every((w) => _matches(tags, w) || _matches(keywords, w))) {
         byCategory.add(picture);
+      } else if (words.any((w) => _matches(tags, w) || _matches(keywords, w))) {
+        partly.add(picture);
+      } else {
+        var best = 0.0;
+        for (final phrase in [...tags, ...keywords]) {
+          for (final known in phrase.split(RegExp('[ -]'))) {
+            for (final word in words) {
+              final score = _closeness(word, known);
+              if (score > best) best = score;
+            }
+          }
+        }
+        if (best > 0) scores[picture] = best;
       }
     }
-    return byTags + byCategory;
+    if (byTags.isNotEmpty || byCategory.isNotEmpty) return byTags + byCategory;
+    if (partly.isNotEmpty) return partly;
+    if (scores.isNotEmpty) {
+      final similar = scores.keys.toList()..sort((a, b) => scores[b]!.compareTo(scores[a]!));
+      return similar.take(_fallbackCount).toList();
+    }
+    final newest = [...pictures]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return newest.take(_fallbackCount).toList();
   }
 }
