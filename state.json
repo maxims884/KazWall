@@ -1,5 +1,5 @@
 {
-"counter": 156,
+"counter": 157,
 "series": {
 "большаябелаяцапляозерокараколь": 1,
 "жаркентдунганскаямечетьсеверныеворотабар": 1,
@@ -145,7 +145,8 @@
 "kazakhjewelry": 1,
 "чайканафонеоголившихсякорнейсосны": 1,
 "astanapyramidexhibitionofitemsofnomadick": 1,
-"ортадересинскаяадминистрацияверблюд": 1
+"ортадересинскаяадминистрацияверблюд": 1,
+"берегбухтармы": 1
 },
 "used": [
 "commons-104186558",
@@ -178,6 +179,7 @@
 "commons-132631057",
 "commons-133113496",
 "commons-133182337",
+"commons-133183716",
 "commons-133219213",
 "commons-133235746",
 "commons-133243214",
@@ -329,6 +331,7 @@
 "openverse-7218c240-a5d6-4196-9151-c3662cc5041f",
 "openverse-73a027f5-126e-4b49-b263-c95eccd3ae23",
 "openverse-73e9889e-59ad-46e6-bcf2-b1d09484ca39",
+"openverse-807508cf-9ae7-4c03-8ac3-4aafd1d24252",
 "openverse-80892bed-ed3a-43ae-97ce-b60eee42586f",
 "openverse-87fd1183-2de1-4ffd-8b87-e31fb0044cc7",
 "openverse-887723ab-d245-4c3a-ae40-13871296079c",
