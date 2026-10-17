@@ -1,5 +1,5 @@
 {
-"counter": 159,
+"counter": 160,
 "series": {
 "большаябелаяцапляозерокараколь": 1,
 "жаркентдунганскаямечетьсеверныеворотабар": 1,
@@ -148,7 +148,8 @@
 "ортадересинскаяадминистрацияверблюд": 1,
 "берегбухтармы": 1,
 "алматыулицамакатаевасверху": 1,
-"космодромбайконуртюльпанборщованаплощадк": 1
+"космодромбайконуртюльпанборщованаплощадк": 1,
+"чарынскаяясеневаярощабогомол": 1
 },
 "used": [
 "commons-104186558",
@@ -183,6 +184,7 @@
 "commons-130230483",
 "commons-132631057",
 "commons-133113496",
+"commons-133175114",
 "commons-133182337",
 "commons-133183716",
 "commons-133219213",
@@ -362,6 +364,7 @@
 "openverse-b50627b1-6743-4456-8bb7-b73a2e179594",
 "openverse-b8377fa2-267e-472a-bcfa-36b9bd6f9182",
 "openverse-bd189ef9-4ddb-4170-9986-e98d26b14a0c",
+"openverse-c3fb577f-5222-47bd-bc70-9973ef5adbef",
 "openverse-c4b141c8-54f5-48a6-a327-e846155b7ed6",
 "openverse-c4c67f0b-3d4e-4a48-847a-840755b766fe",
 "openverse-c6dbbc46-9c83-4a61-adf8-fc8828633095",
@@ -370,6 +373,7 @@
 "openverse-ddf5c115-ced6-454f-aba5-fec0f1ba2d4c",
 "openverse-e97b874c-f8be-4f72-a54e-3e18f4f67261",
 "openverse-efb856cc-eeab-40f5-b792-ad2d4d5ecfdc",
+"openverse-f3270c20-95e3-480f-b92d-737816dd33ae",
 "openverse-f3a2a0c5-ba41-4e25-a74e-8bf26067be12",
 "openverse-f5723fbb-6230-4132-918c-6af6d8c9072b",
 "openverse-f684e493-d091-4adc-b392-79eaf522d652"
