@@ -4,20 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../config.dart';
+import '../l10n/strings.dart';
 import 'app_settings.dart';
 
 class Ads {
-  // Межстраничная после каждого 3-го действия с картинкой (установка, сохранение, отправка)
+  // Межстраничная — только после завершённого действия с картинкой (установка, сохранение,
+  // отправка): каждое 3-е действие и не чаще раза в 3 минуты. При открытии картинки её больше
+  // не показываем: она появлялась под пальцем пользователя, и AdMob считал такие клики недействительными
   static const _actionsPerAd = 3;
-  // ...и на каждое 6-е открытие картинки, но не чаще раза в минуту
-  static const _opensPerAd = 6;
-  static const _minInterval = Duration(minutes: 1);
+  static const _minInterval = Duration(minutes: 3);
 
   static InterstitialAd? _interstitial;
   static bool _initialized = false;
   static int _actionCount = 0;
-  static int _openCount = 0;
-  static DateTime _lastShown = DateTime.fromMillisecondsSinceEpoch(0);
+  // Отсчёт с запуска приложения: в первые минуты межстраничной рекламы нет
+  static DateTime _lastShown = DateTime.now();
 
   static bool get enabled => !Config.noAds && Platform.isAndroid && !AppSettings.instance.adsRemoved;
 
@@ -43,16 +44,11 @@ class Ads {
   /// Вызывать после действия с картинкой. [onDone] выполнится сразу или после закрытия рекламы
   static void afterAction([VoidCallback? onDone]) {
     _actionCount++;
-    if (_actionCount % _actionsPerAd == 0) {
+    if (_actionCount % _actionsPerAd == 0 && DateTime.now().difference(_lastShown) > _minInterval) {
       _show(onDone);
     } else {
       onDone?.call();
     }
-  }
-
-  static void onPictureOpened() {
-    _openCount++;
-    if (_openCount % _opensPerAd == 0 && DateTime.now().difference(_lastShown) > _minInterval) _show(null);
   }
 
   static void _show(VoidCallback? onDone) {
@@ -193,14 +189,41 @@ class _NativeAdTileState extends State<NativeAdTile> with AutomaticKeepAliveClie
     super.build(context);
     final ad = _ad;
     if (ad == null || !_loaded || !Ads.enabled) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.all(6),
-      child: ClipRRect(
+    final colors = Theme.of(context).colorScheme;
+    // Реклама заметно отличается от картинок: своя подложка с рамкой, подпись "Реклама" и отступы
+    // сверху и снизу, чтобы её нельзя было нажать вместо соседней картинки
+    return Container(
+      margin: const EdgeInsets.fromLTRB(6, 18, 6, 18),
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(16),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 320, maxHeight: 360),
-          child: AdWidget(ad: ad),
-        ),
+        border: Border.all(color: colors.outline),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
+            child: Row(
+              children: [
+                Icon(Icons.campaign_outlined, size: 16, color: colors.onSurfaceVariant),
+                const SizedBox(width: 6),
+                Text(
+                  S.of(context)['ad_badge'],
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: colors.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 320, maxHeight: 360),
+              child: AdWidget(ad: ad),
+            ),
+          ),
+        ],
       ),
     );
   }

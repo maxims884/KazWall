@@ -18,7 +18,6 @@ import 'wallpaper_crop_screen.dart';
 
 /// Открывает просмотр картинки поверх сетки. Фон прозрачный: при свайпе вниз сквозь него видна сетка
 void openViewer(BuildContext context, List<Picture> pictures, int index) {
-  Ads.onPictureOpened();
   Navigator.of(context).push(
     PageRouteBuilder(
       opaque: false,

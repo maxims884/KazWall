@@ -22,8 +22,8 @@ class PictureGrid extends StatefulWidget {
 }
 
 class _PictureGridState extends State<PictureGrid> {
-  // Сколько рядов картинок между рекламными блоками
-  static const _rowsBetweenAds = 4;
+  // Сколько рядов картинок между рекламными блоками: реже, чем было, чтобы реклама не попадалась под палец
+  static const _rowsBetweenAds = 6;
 
   List<Picture>? _pictures;
 
