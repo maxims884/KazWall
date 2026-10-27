@@ -1,5 +1,5 @@
 {
-"counter": 153,
+"counter": 154,
 "series": {
 "видсгорнолыжногокомплексаамирсой": 2,
 "узбекистанташкентботсадлотосорехоносныйц": 1,
@@ -143,7 +143,8 @@
 "ташкентбагряникнаулицемукими": 1,
 "domeofgureamir": 1,
 "woodenceilingtashkent": 1,
-"кокандулицаободюрт": 1
+"кокандулицаободюрт": 1,
+"koʻkaldoshmadrasasibezak": 1
 },
 "used": [
 "commons-130633650",
@@ -245,6 +246,7 @@
 "commons-176324566",
 "commons-176384701",
 "commons-176384865",
+"commons-176386197",
 "commons-176537990",
 "commons-176606446",
 "commons-176804007",
@@ -357,6 +359,7 @@
 "openverse-c3fb577f-5222-47bd-bc70-9973ef5adbef",
 "openverse-c7eac830-5169-4223-83ff-40580f3abe07",
 "openverse-ca5fe0ef-c0ef-4fba-8f30-56433501c3ec",
+"openverse-ceff9885-1676-45cc-baa4-744fe08fc77a",
 "openverse-d724c029-c4f2-4b41-a82e-ae7cd3cc4087",
 "openverse-d8d275f8-475e-4413-802e-80dbd7bc1227",
 "openverse-dbdafc8b-462c-4c77-a757-57fe013cf389",
