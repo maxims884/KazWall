@@ -1,5 +1,5 @@
 {
-"counter": 157,
+"counter": 158,
 "series": {
 "видсгорнолыжногокомплексаамирсой": 2,
 "узбекистанташкентботсадлотосорехоносныйц": 1,
@@ -147,7 +147,8 @@
 "koʻkaldoshmadrasasibezak": 1,
 "бухараарктронныйзал": 1,
 "плосконожкаобыкновенная": 1,
-"зимнийвидначарвак": 1
+"зимнийвидначарвак": 1,
+"бухаракукельдаштарелка": 1
 },
 "used": [
 "commons-130633650",
@@ -289,6 +290,7 @@
 "commons-177621495",
 "commons-177720010",
 "commons-178747125",
+"commons-183242552",
 "commons-187538783",
 "commons-187538794",
 "commons-193157758",
@@ -364,6 +366,7 @@
 "openverse-ae9f7562-caec-4f0e-91f0-af2bc39ff9bc",
 "openverse-aee45b37-9740-498b-ab36-b2f6f1f4590b",
 "openverse-b1b845cf-995c-460d-9657-e4b6eb0972c6",
+"openverse-c0ec7602-4a9a-48f5-a340-d8e81883a6f9",
 "openverse-c3fb577f-5222-47bd-bc70-9973ef5adbef",
 "openverse-c7eac830-5169-4223-83ff-40580f3abe07",
 "openverse-ca5fe0ef-c0ef-4fba-8f30-56433501c3ec",
