@@ -1,5 +1,5 @@
 {
-"counter": 176,
+"counter": 177,
 "series": {
 "большаябелаяцапляозерокараколь": 1,
 "жаркентдунганскаямечетьсеверныеворотабар": 1,
@@ -162,7 +162,8 @@
 "спорткомплексмедео": 1,
 "краснокнижныетюльпаныкокжайляу": 1,
 "платоассы": 1,
-"поймарекииртышдятел": 1
+"поймарекииртышдятел": 1,
+"romancatholiccathedraloftheholytrinityin": 1
 },
 "used": [
 "commons-10096455",
@@ -346,6 +347,7 @@
 "commons-39120911",
 "commons-42037444",
 "commons-42037448",
+"commons-48400425",
 "commons-48481831",
 "commons-52894256",
 "commons-56462167",
@@ -405,6 +407,7 @@
 "openverse-6c2bc223-8f17-471f-8c72-f4b485c71869",
 "openverse-6db31c78-d553-48f5-a3c5-33a3800d0ec7",
 "openverse-6fd6fe6d-5d9e-4bf0-8c43-e66907ddd85b",
+"openverse-711c7426-ea79-4a29-9866-2e1f8b4760fa",
 "openverse-7218c240-a5d6-4196-9151-c3662cc5041f",
 "openverse-73a027f5-126e-4b49-b263-c95eccd3ae23",
 "openverse-73e9889e-59ad-46e6-bcf2-b1d09484ca39",
