@@ -1,5 +1,5 @@
 {
-"counter": 169,
+"counter": 170,
 "series": {
 "видсгорнолыжногокомплексаамирсой": 2,
 "узбекистанташкентботсадлотосорехоносныйц": 1,
@@ -156,7 +156,8 @@
 "безымянноеозеропопутиктермиташу": 1,
 "бухарамедресеулугбекаколонна": 1,
 "islamhojaminaretkhivaislomxoʻjaminorasiм": 1,
-"аскалафпёстрый": 1
+"аскалафпёстрый": 1,
+"tupalanglake": 1
 },
 "used": [
 "commons-130633650",
@@ -319,6 +320,7 @@
 "commons-193179431",
 "commons-193182537",
 "commons-193183520",
+"commons-193324103",
 "commons-193327925",
 "commons-193605777",
 "commons-193605798",
@@ -338,6 +340,7 @@
 "flag-3",
 "openverse-000ac9e7-4ea6-4c05-820e-36e099db2909",
 "openverse-04aa73f3-b1b3-49dc-84cb-fee45f5765e1",
+"openverse-0658ccf3-e93a-4933-94b8-c12ad4d8dda0",
 "openverse-081fb8b7-20dc-49b2-9c0d-99b835815bfd",
 "openverse-0ac8b1d3-7651-4417-9d01-280c7a05757b",
 "openverse-0be15c80-d44b-4160-b37a-0298b45d44f4",
@@ -400,6 +403,7 @@
 "openverse-c7eac830-5169-4223-83ff-40580f3abe07",
 "openverse-ca5fe0ef-c0ef-4fba-8f30-56433501c3ec",
 "openverse-ceff9885-1676-45cc-baa4-744fe08fc77a",
+"openverse-d619943c-4222-4195-b420-3814ba5b0fc1",
 "openverse-d724c029-c4f2-4b41-a82e-ae7cd3cc4087",
 "openverse-d8d275f8-475e-4413-802e-80dbd7bc1227",
 "openverse-dbdafc8b-462c-4c77-a757-57fe013cf389",
