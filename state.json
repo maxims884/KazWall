@@ -1,5 +1,5 @@
 {
-"counter": 185,
+"counter": 186,
 "series": {
 "большаябелаяцапляозерокараколь": 1,
 "жаркентдунганскаямечетьсеверныеворотабар": 1,
@@ -169,7 +169,8 @@
 "operahallpalaceofpeaceandreconciliation": 1,
 "поймаиртышакосуля": 1,
 "зеркальныйкаинды": 1,
-"площадьуакорды": 1
+"площадьуакорды": 1,
+"stunningmountainview": 1
 },
 "used": [
 "commons-10096455",
@@ -244,6 +245,7 @@
 "commons-133878244",
 "commons-133995374",
 "commons-134228436",
+"commons-134270898",
 "commons-134350112",
 "commons-134350115",
 "commons-136668577",
@@ -454,6 +456,7 @@
 "openverse-87fd1183-2de1-4ffd-8b87-e31fb0044cc7",
 "openverse-887723ab-d245-4c3a-ae40-13871296079c",
 "openverse-89b42901-c9e5-45e9-bedf-d9209be29bbc",
+"openverse-8a3b8004-f1cf-4c1a-92d1-967cb12fbb66",
 "openverse-8eb28313-b54b-42a1-9d25-d16f5b1f0ebb",
 "openverse-914d8957-2e12-41eb-b64e-0f27ce161af7",
 "openverse-917ec2c1-e6e1-46f2-a120-79ffc6b2095a",
@@ -475,6 +478,7 @@
 "openverse-c6dbbc46-9c83-4a61-adf8-fc8828633095",
 "openverse-cb922cb0-6014-467c-997e-ffb43b404ac1",
 "openverse-ceff9885-1676-45cc-baa4-744fe08fc77a",
+"openverse-d2cb00a4-0098-41fb-8245-36b298327f42",
 "openverse-d4d4a665-fbca-43e6-aaf8-040cbf5dd1ab",
 "openverse-d724c029-c4f2-4b41-a82e-ae7cd3cc4087",
 "openverse-d8d275f8-475e-4413-802e-80dbd7bc1227",
