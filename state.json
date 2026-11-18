@@ -1,5 +1,5 @@
 {
-"counter": 191,
+"counter": 192,
 "series": {
 "большаябелаяцапляозерокараколь": 1,
 "жаркентдунганскаямечетьсеверныеворотабар": 1,
@@ -174,7 +174,8 @@
 "лошадьнагорномвыпасе": 1,
 "енбекшиказахскийрайоншинтургенскоеущелье": 1,
 "arystanbabmausoleumcenter": 1,
-"borovoe": 1
+"borovoe": 1,
+"виднасолнечнуюдолинуверховьялевоготалгар": 1
 },
 "used": [
 "commons-10096455",
@@ -206,6 +207,7 @@
 "commons-120474588",
 "commons-120497116",
 "commons-120497163",
+"commons-120497448",
 "commons-120498485",
 "commons-120502589",
 "commons-120799204",
@@ -450,6 +452,7 @@
 "openverse-56fd5a7f-121a-4902-813d-b8e83ab9b09c",
 "openverse-5af09439-bff2-4419-b469-d1ecfb32685f",
 "openverse-5bc5cd58-a945-47b6-a0f3-c9a6dfe88554",
+"openverse-5e25d98e-5002-470e-9767-429a13ff54d7",
 "openverse-5ee493a2-cfea-4e1a-9d41-661e7a70b74d",
 "openverse-65b77c08-0222-4adc-85da-bc443d2e6048",
 "openverse-6c2bc223-8f17-471f-8c72-f4b485c71869",
