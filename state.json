@@ -1,5 +1,5 @@
 {
-"counter": 192,
+"counter": 193,
 "series": {
 "большаябелаяцапляозерокараколь": 1,
 "жаркентдунганскаямечетьсеверныеворотабар": 1,
@@ -175,7 +175,8 @@
 "енбекшиказахскийрайоншинтургенскоеущелье": 1,
 "arystanbabmausoleumcenter": 1,
 "borovoe": 1,
-"виднасолнечнуюдолинуверховьялевоготалгар": 1
+"виднасолнечнуюдолинуверховьялевоготалгар": 1,
+"petroglyphswithinthearchaeologicallandsc": 1
 },
 "used": [
 "commons-10096455",
@@ -389,6 +390,7 @@
 "commons-52894256",
 "commons-56462167",
 "commons-57843858",
+"commons-58156988",
 "commons-67990123",
 "commons-67990219",
 "commons-67990222",
@@ -448,6 +450,7 @@
 "openverse-4fe5d8e9-059c-40f0-a5e3-c9c417ac7ca8",
 "openverse-51015943-175f-4089-a827-3035096829c7",
 "openverse-51265cd8-fd08-4f50-bf22-550c2e163cec",
+"openverse-51ad3269-4fbe-4fc4-bc23-f52b6b2a4c12",
 "openverse-54378a54-6905-48cf-ad0f-0c1e8453120b",
 "openverse-56fd5a7f-121a-4902-813d-b8e83ab9b09c",
 "openverse-5af09439-bff2-4419-b469-d1ecfb32685f",
@@ -498,6 +501,7 @@
 "openverse-d4d4a665-fbca-43e6-aaf8-040cbf5dd1ab",
 "openverse-d724c029-c4f2-4b41-a82e-ae7cd3cc4087",
 "openverse-d8d275f8-475e-4413-802e-80dbd7bc1227",
+"openverse-dc2e88c8-7ff0-4afe-8722-0c0b894cda4b",
 "openverse-ddf5c115-ced6-454f-aba5-fec0f1ba2d4c",
 "openverse-dea24deb-12ea-4ccd-9238-26e6dc3c8e19",
 "openverse-e3983e81-90b2-4429-a999-d349367d9015",
