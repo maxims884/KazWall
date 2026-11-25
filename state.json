@@ -1,5 +1,5 @@
 {
-"counter": 198,
+"counter": 199,
 "series": {
 "большаябелаяцапляозерокараколь": 1,
 "жаркентдунганскаямечетьсеверныеворотабар": 1,
@@ -179,7 +179,8 @@
 "petroglyphswithinthearchaeologicallandsc": 1,
 "viewfrompalaceofpeaceandreconciliationto": 1,
 "лошадинажайляу": 1,
-"manturovandtokaev": 1
+"manturovandtokaev": 1,
+"chimbulachkapeak": 1
 },
 "used": [
 "commons-10096455",
@@ -268,6 +269,7 @@
 "commons-134270898",
 "commons-134350112",
 "commons-134350115",
+"commons-134350702",
 "commons-136382955",
 "commons-136668577",
 "commons-137765857",
@@ -507,6 +509,7 @@
 "openverse-b1e8fb67-4bd6-4d4f-bd5f-8d82e9701e6c",
 "openverse-b50627b1-6743-4456-8bb7-b73a2e179594",
 "openverse-b8377fa2-267e-472a-bcfa-36b9bd6f9182",
+"openverse-ba03ca3c-44df-462f-964d-8c5ce603a398",
 "openverse-bd189ef9-4ddb-4170-9986-e98d26b14a0c",
 "openverse-bd7cec9c-b289-47ff-967c-12729d8620a7",
 "openverse-c38c4ce0-507b-49c9-b47f-9041692857db",
