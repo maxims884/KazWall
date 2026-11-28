@@ -1,5 +1,5 @@
 {
-"counter": 201,
+"counter": 202,
 "series": {
 "большаябелаяцапляозерокараколь": 1,
 "жаркентдунганскаямечетьсеверныеворотабар": 1,
@@ -100,7 +100,7 @@
 "baikonurcityimgbaikonur": 2,
 "tamgalytaspetroglyphs": 1,
 "zeekrxalmatylrm": 1,
-"селокараойалматинскаяобласть": 1,
+"селокараойалматинскаяобласть": 2,
 "устюртчинки": 1,
 "kazakhstanp": 1,
 "viewofkoktobeamusementpartandalmatytvtow": 1,
@@ -381,6 +381,7 @@
 "commons-196574578",
 "commons-196575641",
 "commons-196575648",
+"commons-196637407",
 "commons-196637428",
 "commons-196677212",
 "commons-197185921",
@@ -541,6 +542,7 @@
 "openverse-f3270c20-95e3-480f-b92d-737816dd33ae",
 "openverse-f3a2a0c5-ba41-4e25-a74e-8bf26067be12",
 "openverse-f5723fbb-6230-4132-918c-6af6d8c9072b",
-"openverse-f684e493-d091-4adc-b392-79eaf522d652"
+"openverse-f684e493-d091-4adc-b392-79eaf522d652",
+"openverse-fa5fb17c-8b63-44f5-8eb5-4ebed8e1a43c"
 ]
 }
